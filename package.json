@@ -1,0 +1,29 @@
+{
+  "name": "kudosurevamped",
+  "version": "1.0.0",
+  "description": "A new concept about the unused kudosu system on osu!",
+  "main": "kds.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maotovisk/kudosurevamp.git"
+  },
+  "keywords": [
+    "kudosu",
+    "osu",
+    "mapper"
+  ],
+  "author": "Maot",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/maotovisk/kudosurevamp/issues"
+  },
+  "homepage": "https://github.com/maotovisk/kudosurevamp#readme",
+  "dependencies": {
+    "client-oauth2": "^4.2.5",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1"
+  }
+}
