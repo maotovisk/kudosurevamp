@@ -1,32 +1,16 @@
 var ClientOAuth2 = require('client-oauth2');
 var crypto = require('crypto');
-var express = require('express');
+var osuApi = require("./osuApiHandler")
 
 const OAuthCredentials = require("../.private/oauthosu.json");
 
-async function init() {
+async function init(expressServer) {
     await startOauth();
     async function startOauth() {
-        const webServer = await startWebServer();
+        const webServer = expressServer;
         const OAuthClient = await createOsuOAuthClient();
-        requestUserConsent(OAuthClient);
-        const AuthorizationToken = await waitForOsuCallback(webServer, OAuthClient);
-       
+        await startOAuthCallBack(webServer, OAuthClient);
 
-        async function startWebServer() {
-            return new Promise((resolve, reject) => {
-                const port = 7788
-                const app = express()
-    
-                const server = app.listen(port, () => {
-                    console.log(`Listening on http://localhost:${port}`)
-                    resolve({
-                        app,
-                        server
-                    })
-                })
-            })
-        }
         async function createOsuOAuthClient() {
             var osuAuthClient = new ClientOAuth2({
                 clientId: OAuthCredentials.OAUTH_CLIENT_ID,
@@ -39,43 +23,34 @@ async function init() {
             return osuAuthClient;
         }
 
-        function requestUserConsent(OAuthClient) {
+        function generateOAuthRequestURI(OAuthClient) {
             const consentUrl = OAuthClient.code.getUri();
-
-            console.log(`Authenticate: ${consentUrl + crypto.randomBytes(20).toString('hex')}`)
+            let state = crypto.randomBytes(64).toString('hex');
+            return consentUrl + state;
         }
 
-        async function waitForOsuCallback(webServer, OAuthClient) {
-            return new Promise((resolve, reject) => {
-                console.log('Waiting for authentication...')
 
-                webServer.app.get('/oauth/callback', (req, res) => {
-                    console.log("Requesting persistent authorization code...");
-                    OAuthClient.code.getToken(req.originalUrl).then(function (user) {
-                    const requestResponse = JSON.stringify(req.query);
-                    console.log(`Response: ${requestResponse}`)
-                    res.send('Authorized! Bearer: ' + user.accessToken);
-                        resolve(user.accessToken)
+        async function startOAuthCallBack(webServer, OAuthClient) {
+            webServer.app.get('/oauth/callback', (req, res) => {
+                OAuthClient.code.getToken(req.originalUrl).then(function (user) {
+                    osuApi.getUserInfoByBearer(user.accessToken).then((json_users) => {
+                        if (json_users.includes('{"avatar_url":')) {
+                            let parsed = JSON.parse(json_users);
+                            console.log(parsed.username);
+                            res.cookie('access_token', user.accessToken).cookie("userOsu", parsed.username);
+                            res.redirect(301, '/index');
+                        } else {
+                            res.send("Internal server error! JSON: " + json_users);
+                        }
                     })
+
                 })
             })
-        }
-        
-        async function tokenValidation(OAuthClient, temporaryAuthorizationToken, webServer) {
-            ///TODOOOOO
-
-
-        }
-
-
-        async function stopWebServer(webServer) {
-            return new Promise((resolve, reject) => {
-                webServer.server.close(() => {
-                    resolve()
-                })
+            webServer.app.get('/oauth', (req, res) => {
+                let redirectURI = generateOAuthRequestURI(OAuthClient);
+                res.redirect(301, redirectURI);
             })
         }
-
     }
 }
 
