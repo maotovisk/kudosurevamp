@@ -37,7 +37,7 @@ async function init(expressServer) {
                         if (json_users.includes('{"avatar_url":')) {
                             let parsed = JSON.parse(json_users);
                             console.log(parsed.username);
-                            res.cookie('access_token', user.accessToken).cookie("userOsu", parsed.username);
+                            res.cookie('access_token', user.accessToken).cookie("userOsu", parsed.username).cookie("refresh_token", user.refreshToken);
                             res.redirect(301, '/index');
                         } else {
                             res.send("Internal server error! JSON: " + json_users);

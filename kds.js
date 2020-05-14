@@ -1,6 +1,7 @@
 var OAuthHandler = require("./util/oauthHandler");
 var express = require('express');
 var cookieParser = require('cookie-parser')
+var session = require('express-session');
 
 
 async function startService() {
@@ -15,6 +16,10 @@ async function startService() {
 
             const server = app.listen(port, () => {
                 app.use(cookieParser());
+                app.use(session({  secret: 'net0gay',
+                resave: false,
+                saveUninitialized: false,
+                cookie: { secure: false }}));
                 console.log(`Listening on http://localhost:${port}`)
                 resolve({
                     app,
@@ -27,6 +32,7 @@ async function startService() {
     async function startServerViews(webServer) {
         webServer.app.get('/index', (req, res) => {
             if (req.cookies.access_token) {
+                req.session.login = true;
                 res.send("Logado com token!\nUsuario: " + req.cookies.userOsu)
             } else {
                 res.send("Clique <a href='/login'> aqui</a> para logar!");
@@ -39,6 +45,15 @@ async function startService() {
             } else {
                 res.redirect(301, '/oauth');
             }
+        })
+
+        webServer.app.get('/debug', (req, res) => {
+            res.send(`
+            Session Details: ${req.session.login}\n
+            Cookie Detail: ${req.cookies.access_token}\n
+                            ${req.cookies.userOsu}                  
+            `)
+
         })
     }
 }
