@@ -1,0 +1,17 @@
+
+    <div class="ui menu">
+        <div class="ui container">
+            <% for (item of nav.items) {%>
+                <a href="<%= item.href %>" class="item <% if (item.active) { %>active<% } %>"> <%= item.title%> </a>
+            <% }%>
+            <% if (nav.login == true) { %>
+                <div class="right menu">
+                    <a class="item">Welcome, <%= user.name%></a>
+                </div>
+            <% } else { %>
+                <div class="right menu">
+                    <a href="/login" class="item">Login</a>
+                </div>
+            <% } %>
+        </div>
+    </div>

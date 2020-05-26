@@ -1,4 +1,13 @@
-<%- contentFor('body') %>
-<div class="jumbotron text-center">
-    Bem vindo <%= user.username %>!
-</div>
+<%- contentFor('body') %><%- include('elements/navbar', {
+    nav: {
+        "items": [{"title": "Home", active: true}],
+        "login": true
+    }
+    }); %>
+    <div class="container is-fluid">
+
+        <div class="notification">
+            Welcome <strong><%= user.username %></strong>!
+        </div>
+
+  </div>

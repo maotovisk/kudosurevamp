@@ -1,5 +1,16 @@
-<div class="jumbotron text-center">
-    Not Authenticated, please log in!
-    \n
-    <a href="/login" class="btn btn-success">login</a>
+<%- contentFor('body') %>
+
+<div class="ui container">
+    <%- include('elements/navbar', {
+    nav: {
+        "items": [{"title": "Home", active: true}],
+        "login": false
+    }
+    }); %>
+    <div class="ui segment padded text center aligned">
+        Welcome to the KUDOSU REVAMPED(tm). Please login to get started.
+        <br>
+        <br>
+        <a href="/login" class="ui green button">Get started.</a>
+    </div>
 </div>
