@@ -3,6 +3,7 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var expressLayouts = require('express-ejs-layouts');
 
 
 async function startService() {
@@ -17,6 +18,8 @@ async function startService() {
 
             const server = app.listen(port, () => {
                 app.use(cookieParser());
+                app.set('view engine', 'ejs')
+                app.use(expressLayouts);
                 app.use(session({  secret: 'net0gay',
                   resave: false,
                   saveUninitialized: false,
@@ -57,9 +60,9 @@ async function startService() {
 
         webServer.app.get('/index', (req, res) => {
             if (req.cookies.credentials && req.session.login) {
-                res.send("Logado com token!\nUsuario: " + req.cookies.credentials.username + "\nClique <a href='/debug'> aqui</a> para mais detalhes!")
-            } else {
-                res.send("Clique <a href='/login'> aqui</a> para logar!");
+                res.render("pages/index.ejs", {user: req.cookies.credentials});
+                } else {
+                res.render("pages/indexNotLoggedIn.ejs");
             }
         })
 
