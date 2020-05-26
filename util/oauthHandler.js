@@ -18,7 +18,7 @@ async function init(expressServer) {
                 accessTokenUri: OAuthCredentials.OAUTH_TOKEN_ACCESS,
                 authorizationUri: OAuthCredentials.OAUTH_AUTHORIZE_URI,
                 redirectUri: OAuthCredentials.OAUTH_REDIRECT_URI,
-                scopes: ["identify", "users.read"],
+                scopes: ["identify", "public"],
             });
             return osuAuthClient;
         }
@@ -36,9 +36,17 @@ async function init(expressServer) {
                     osuApi.getUserInfoByBearer(user.accessToken).then((json_users) => {
                         if (json_users.includes('{"avatar_url":')) {
                             let parsed = JSON.parse(json_users);
-                            console.log(parsed.username);
-                            res.cookie('access_token', user.accessToken).cookie("userOsu", parsed.username).cookie("refresh_token", user.refreshToken);
-                            res.redirect(301, '/index');
+                            let userCredentials = {
+                                isAuthenticated: true,
+                                accessToken: user.accessToken,
+                                username: parsed.username,
+                                userId: parsed.userId,
+                                refreshToken: user.refreshToken
+                            }
+                            res.cookie('credentials', userCredentials)
+                            req.session.login = true;
+                            req.session.id = user.accessToken;
+                            res.redirect(302, '/index');
                         } else {
                             res.send("Internal server error! JSON: " + json_users);
                         }
