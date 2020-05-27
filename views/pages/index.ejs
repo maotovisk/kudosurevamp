@@ -4,10 +4,13 @@
         "login": true
     }
     }); %>
-    <div class="container is-fluid">
-
-        <div class="notification">
-            Welcome <strong><%= user.username %></strong>!
-        </div>
+      <div class="jumbotron">
+        <h1 class="display-3">Welcome <%= user.username %> </h1>
+        <p class="lead">You are authenticated.</p>
+        <hr class="my-4">
+        <p>Current kudosu available: <%= user.kudosu %></p>
+      </div>
 
   </div>
+
+

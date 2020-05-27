@@ -40,7 +40,9 @@ async function init(expressServer) {
                                 isAuthenticated: true,
                                 accessToken: user.accessToken,
                                 username: parsed.username,
-                                userId: parsed.userId,
+                                userId: parsed.user_id,
+                                kudosu: parsed.kudosu,
+                                avatarUrl: parsed.avatar_url,
                                 refreshToken: user.refreshToken
                             }
                             res.cookie('credentials', userCredentials)

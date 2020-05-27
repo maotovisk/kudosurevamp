@@ -1,16 +1,18 @@
 <%- contentFor('body') %>
 
-<div class="ui container">
     <%- include('elements/navbar', {
     nav: {
         "items": [{"title": "Home", active: true}],
         "login": false
     }
     }); %>
-    <div class="ui segment padded text center aligned">
-        Welcome to the KUDOSU REVAMPED(tm). Please login to get started.
-        <br>
-        <br>
-        <a href="/login" class="ui green button">Get started.</a>
-    </div>
+<div class="container pt-100">
+      <div class="jumbotron ">
+        <h1 class="display-5">Welcome to KudosuRevamp&trade;!</h1>
+        <p class="lead">It is a simple system that uses kudosu as currency, you can earn titles, badges and a lot of other things, using your kudosu earned from modding on osu!.</p>
+        <p>Please log-in with your osu! account to get started!.</p>
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" href="/login" role="button">Get started</a>
+        </p>
+      </div>
 </div>
