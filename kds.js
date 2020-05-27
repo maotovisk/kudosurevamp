@@ -46,9 +46,9 @@ async function startService() {
     async function startServerViews(webServer) {
         var sessionChecker = (req, res, next) => {
             if (req.cookies.credentials && req.session.login) {
-                res.redirect('/debug');
-            } else {
                 next();
+            } else {
+                res.redirect('/debug');
             }    
         };
 
