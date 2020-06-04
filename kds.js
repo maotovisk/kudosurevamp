@@ -54,7 +54,7 @@ async function startService() {
 
         webServer.app.use(express.static('public'));
 
-        webServer.app.get('/', sessionChecker, (req, res) => {
+        webServer.app.get('/', (req, res) => {
             res.redirect('/index');
         });
 
