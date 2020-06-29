@@ -1,6 +1,6 @@
 import ClientOAuth2 from 'client-oauth2';
 import crypto from 'crypto';
-import osuApi from "./osuApiHandler.js";
+import getUserInfoByBearer from "./osuApiHandler.js";
 import fs from 'fs';
 
 const OAuthCredentials = JSON.parse(fs.readFileSync('./.private/oauthosu.json', 'utf-8'));
@@ -29,13 +29,13 @@ export default async function(expressServer) {
         function generateOAuthRequestURI(OAuthClient) {
             const consentUrl = OAuthClient.code.getUri();
             let state = crypto.randomBytes(64).toString('hex');
-            return consentUrl + state;
+            return {url: consentUrl + state, state};
         }
 
         async function startOAuthCallBack(webServer, OAuthClient) {
             webServer.app.get('/oauth/callback', (req, res) => {
                 OAuthClient.code.getToken(req.originalUrl).then(function (user) {
-                    osuApi.getUserInfoByBearer(user.accessToken).then((json_users) => {
+                    getUserInfoByBearer(user.accessToken).then((json_users) => {
                         if (json_users.includes('{"avatar_url":')) {
                             let parsed = JSON.parse(json_users);
                             let userCredentials = {
@@ -49,7 +49,7 @@ export default async function(expressServer) {
                             };
                             res.cookie('credentials', userCredentials);
                             req.session.login = true;
-                            req.session.id = user.accessToken;
+                            req.session.token = user.accessToken;
                             res.redirect(301, '/index');
                         } else {
                             res.send("Internal server error! JSON: " + json_users);
@@ -60,7 +60,8 @@ export default async function(expressServer) {
             })
             webServer.app.get('/authenticate', (req, res) => {
                 let redirectURI = generateOAuthRequestURI(OAuthClient);
-                res.redirect(307, redirectURI);
+                req.session._state = redirectURI.state;
+                res.redirect(307, redirectURI.url);
             })
 
             webServer.app.get("/user", (req, res) => {

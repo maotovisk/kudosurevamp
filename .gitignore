@@ -104,7 +104,7 @@ dist
 .tern-port
 
 # Kudosu Revamp Credentials
-.private
+.private/oauthosu.json
 
 # Configuration File
 config.json
