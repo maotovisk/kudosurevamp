@@ -105,3 +105,6 @@ dist
 
 # Kudosu Revamp Credentials
 .private
+
+# Configuration File
+config.json

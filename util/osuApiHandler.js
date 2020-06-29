@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+import fetch from 'node-fetch';
 
 
 const v2URI = "https://osu.ppy.sh/api/v2/"
@@ -24,4 +24,4 @@ async function getUserInfoByBearer(bearerToken) {
     )
 }
 
-module.exports = {getUserInfoByBearer}
+export default getUserInfoByBearer;

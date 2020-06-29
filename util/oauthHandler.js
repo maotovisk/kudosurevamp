@@ -1,12 +1,15 @@
-var ClientOAuth2 = require('client-oauth2');
-var crypto = require('crypto');
-var osuApi = require("./osuApiHandler")
+import ClientOAuth2 from 'client-oauth2';
+import crypto from 'crypto';
+import osuApi from "./osuApiHandler.js";
+import fs from 'fs';
 
-const OAuthCredentials = require("../.private/oauthosu.json");
+const OAuthCredentials = JSON.parse(fs.readFileSync('./.private/oauthosu.json', 'utf-8'));
 
-async function init(expressServer) {
+
+export default async function(expressServer) {
     await startOauth();
     async function startOauth() {
+        //const OAuthCredentials = await loadCredentials();
         const webServer = expressServer;
         const OAuthClient = await createOsuOAuthClient();
         await startOAuthCallBack(webServer, OAuthClient);
@@ -29,7 +32,6 @@ async function init(expressServer) {
             return consentUrl + state;
         }
 
-
         async function startOAuthCallBack(webServer, OAuthClient) {
             webServer.app.get('/oauth/callback', (req, res) => {
                 OAuthClient.code.getToken(req.originalUrl).then(function (user) {
@@ -44,11 +46,11 @@ async function init(expressServer) {
                                 kudosu: parsed.kudosu,
                                 avatarUrl: parsed.avatar_url,
                                 refreshToken: user.refreshToken
-                            }
-                            res.cookie('credentials', userCredentials)
+                            };
+                            res.cookie('credentials', userCredentials);
                             req.session.login = true;
                             req.session.id = user.accessToken;
-                            res.redirect(302, '/index');
+                            res.redirect(301, '/index');
                         } else {
                             res.send("Internal server error! JSON: " + json_users);
                         }
@@ -56,12 +58,14 @@ async function init(expressServer) {
 
                 })
             })
-            webServer.app.get('/oauth', (req, res) => {
+            webServer.app.get('/authenticate', (req, res) => {
                 let redirectURI = generateOAuthRequestURI(OAuthClient);
-                res.redirect(301, redirectURI);
+                res.redirect(307, redirectURI);
+            })
+
+            webServer.app.get("/user", (req, res) => {
+                res.send(`{user: "nicks", badges: [{name: "QAH BEAST", img_url: "gay"}]}`)
             })
         }
     }
 }
-
-module.exports = { init }

@@ -1,16 +1,15 @@
-var OAuthHandler = require("./util/oauthHandler");
-var express = require('express');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var expressLayouts = require('express-ejs-layouts');
+import OAuthHandler from './util/oauthHandler.js';
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import expressLayouts from 'express-ejs-layouts';
 
 
 async function startService() {
     const expressServer = await startWebServer();
-    await OAuthHandler.init(expressServer);
+    await OAuthHandler(expressServer);
     await startServerViews(expressServer);
-
     async function startWebServer() {
         return new Promise((resolve, reject) => {
             const port = 7788;
@@ -55,7 +54,7 @@ async function startService() {
         webServer.app.use(express.static('public'));
 
         webServer.app.get('/', (req, res) => {
-            res.redirect('/index');
+            res.redirect(301, '/index');
         });
 
         webServer.app.get('/index', (req, res) => {
@@ -67,17 +66,8 @@ async function startService() {
         })
 
         webServer.app.get('/login', (req, res) => {
-                res.redirect(301, '/oauth');
+                res.redirect(301, '/authenticate');
         })
-
-        webServer.app.get('/debug', (req, res) => {
-            res.send(`
-            Session Details: isLoggedIn: ${req.session.login}\n
-            Cookie Detail: ${JSON.stringify(req.cookies.credentials)}`)
-
-        })
-
-
     }
 }
 
