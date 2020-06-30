@@ -1,8 +1,0 @@
-{
-    "OAUTH_CLIENT_ID": "1293",
-    "OAUTH_CLIENT_SECRET": "r2f6kJ26irsy53FhHB1DWKE6SfIqr0xcUhpVnr47",
-    "OAUTH_AUTHORIZE_URI": "https://osu.ppy.sh/oauth/authorize",
-    "OAUTH_TOKEN_ACCESS": "https://osu.ppy.sh/oauth/token",
-    "OAUTH_REDIRECT_URI": "http://localhost:7788/oauth/callback",
-    "OAUTH_DOMAIN": "localhost:7788"
-}
