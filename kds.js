@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import expressLayouts from 'express-ejs-layouts';
 import fs from 'fs';
+import mongoose from 'mongoose';
 
 const config = JSON.parse(fs.readFileSync('./config.json','utf-8'));
 
@@ -13,6 +14,7 @@ async function startService() {
     const expressServer = await startWebServer();
     await OAuthHandler(expressServer);
     await startServerViews(expressServer);
+    const mongo = await startDatabase(config.MONGO_STRING);
     async function startWebServer() {
         return new Promise((resolve, reject) => {
             const port = 7788;
@@ -43,6 +45,19 @@ async function startService() {
                 })
             })
         })
+    }
+
+    async function startDatabase(mongoString) {
+        return new Promise((resolve, reject) => {
+            mongoose.connect(mongoString,{ useNewUrlParser: true }).then(( ) => {
+                console.log("Connected to KudosuDB")
+                resolve(mongoose.connection);
+            }).catch((e)=> {
+                console.error(mongoString);
+                
+                console.log(e)
+            });
+        });
     }
 
     async function startServerViews(webServer) {
