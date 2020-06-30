@@ -4,6 +4,9 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import expressLayouts from 'express-ejs-layouts';
+import fs from 'fs';
+
+const config = JSON.parse(fs.readFileSync('./config.json','utf-8'));
 
 
 async function startService() {
