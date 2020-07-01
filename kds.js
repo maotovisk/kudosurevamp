@@ -84,13 +84,16 @@ async function startService() {
         webServer.app.use(express.static('public'));
 
         webServer.app.get('/', (req, res) => {
+            res.redirect(301, '/index');
+        });
+
+        webServer.app.get('/index', (req, res) => {
             if (req.cookies.credentials && req.session.login) {
                     res.render("pages/index.ejs", {user: req.cookies.credentials});
                 } else {
                     res.render("pages/indexNotLoggedIn.ejs");
                 }
-        });
-        
+        })
         webServer.app.get('/store', (req, res) => {
             if (req.cookies.credentials && req.session.login) {
                     res.render("pages/store.ejs", {user: req.cookies.credentials});
