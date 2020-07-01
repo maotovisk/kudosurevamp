@@ -1,4 +1,5 @@
 import OAuthHandler from './util/oauthHandler.js';
+import startApiServices from './api/api.js';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
@@ -10,11 +11,22 @@ import mongoose from 'mongoose';
 const config = JSON.parse(fs.readFileSync('./config.json','utf-8'));
 
 
+// MongooSE events
+mongoose.connection.once('open', () => {
+    console.log('Connected to kdsrevamp');
+})
+
+mongoose.connection.on('error', console.error.bind(console, 'Database error:'));
+
+
 async function startService() {
     const expressServer = await startWebServer();
     await OAuthHandler(expressServer);
     await startServerViews(expressServer);
-    const mongo = await startDatabase(config.MONGO_STRING);
+    await startApiServices(expressServer);
+    await startDatabase(config.MONGO_STRING);
+
+
     async function startWebServer() {
         return new Promise((resolve, reject) => {
             const port = 7788;
@@ -24,12 +36,13 @@ async function startService() {
                 app.use(cookieParser());
                 app.set('view engine', 'ejs')
                 app.use(expressLayouts);
-                app.use(session({  secret: 'net0gay',
+                app.use(session({ secret: 'net0gay',
                   resave: false,
                   saveUninitialized: false,
                   cookie: {
                     expires: 600000
                 }}));
+                app.use(express.json());
                 app.use(bodyParser.urlencoded({ extended: true }));
                 app.use((req, res, next) => {
                     if (req.cookies.credentials && !req.session.login) {
@@ -38,7 +51,7 @@ async function startService() {
                     next();
                 });
 
-                console.log(`Listening on http://localhost:${port}`)
+                console.log(`Webserver started at http://localhost:${port}`)
                 resolve({
                     app,
                     server
@@ -49,8 +62,7 @@ async function startService() {
 
     async function startDatabase(mongoString) {
         return new Promise((resolve, reject) => {
-            mongoose.connect(mongoString,{ useNewUrlParser: true }).then(( ) => {
-                console.log("Connected to KudosuDB")
+            mongoose.connect(mongoString,{ useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
                 resolve(mongoose.connection);
             }).catch((e)=> {
                 console.error(mongoString);
@@ -77,10 +89,10 @@ async function startService() {
 
         webServer.app.get('/index', (req, res) => {
             if (req.cookies.credentials && req.session.login) {
-                res.render("pages/index.ejs", {user: req.cookies.credentials});
+                    res.render("pages/index.ejs", {user: req.cookies.credentials});
                 } else {
-                res.render("pages/indexNotLoggedIn.ejs");
-            }
+                    res.render("pages/indexNotLoggedIn.ejs");
+                }
         })
 
         webServer.app.get('/login', (req, res) => {

@@ -1,5 +1,6 @@
 import ClientOAuth2 from 'client-oauth2';
 import crypto from 'crypto';
+import User from '../model/user.js';
 import getUserInfoByBearer from "./osuApiHandler.js";
 import fs from 'fs';
 
@@ -36,21 +37,35 @@ export default async function(expressServer) {
             webServer.app.get('/oauth/callback', (req, res) => {
                 OAuthClient.code.getToken(req.originalUrl).then(function (user) {
                     getUserInfoByBearer(user.accessToken).then((json_users) => {
+                        let parsed = JSON.parse(json_users);
                         if (json_users.includes('{"avatar_url":')) {
-                            let parsed = JSON.parse(json_users);
-                            let userCredentials = {
-                                isAuthenticated: true,
-                                accessToken: user.accessToken,
-                                username: parsed.username,
-                                userId: parsed.user_id,
-                                kudosu: parsed.kudosu,
-                                avatarUrl: parsed.avatar_url,
-                                refreshToken: user.refreshToken
-                            };
-                            res.cookie('credentials', userCredentials);
-                            req.session.login = true;
-                            req.session.token = user.accessToken;
-                            res.redirect(301, '/index');
+                            User.findOne({"osu_id": parsed.id}, (err, userDB)=> {
+                                if (userDB == undefined)
+                                    User.create({
+                                        name: parsed.username,
+                                        osu_id: parsed.id,
+                                        token: user.accessToken,
+                                        kudosu:parsed.kudosu,
+                                        items: [],
+                                        access: {
+                                            role_id: 0,
+                                            admin: (parsed.id == 3914271) ? true : false
+                                        }
+                                    });
+                                let userCredentials = {
+                                    isAuthenticated: true,
+                                    accessToken: user.accessToken,
+                                    username: parsed.username,
+                                    userId: parsed.id,
+                                    kudosu: parsed.kudosu,
+                                    avatarUrl: parsed.avatar_url,
+                                    refreshToken: user.refreshToken
+                                };
+                                res.cookie('credentials', userCredentials);
+                                req.session.login = true;
+                                req.session.token = user.accessToken;
+                                res.redirect(301, '/index');
+                            });
                         } else {
                             res.send("Internal server error! JSON: " + json_users);
                         }
