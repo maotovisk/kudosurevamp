@@ -5,14 +5,16 @@ import Role from '../model/roles.js';
 import express from 'express';
 import session from 'express-session';
 
-async function startApiServices(webServer) {
+const apiRouter = express.Router();
+
+async function startRouters() {
     
-    webServer.app.get('/api', (req,res) => {
+    apiRouter.route('/').get((req,res) => {
         res.send('{"error": "please specify the endpoint"}');
     });
 
     // GET USER ENDPOINT
-    webServer.app.get('/api/user/:osu_id', (req, res) => {
+    apiRouter.route('/user/:osu_id').get( (req, res) => {
         User.findOne({"osu_id": req.params.osu_id}, (err, user) => {
             if (err || user == undefined) 
                 res.send(`{"error": "user not found"}`);
@@ -20,7 +22,8 @@ async function startApiServices(webServer) {
                 let userResponse = {
                     "username": user.name,
                     "id": user.osu_id,
-                    "items": user.items
+                    "items": user.items,
+                    "kudosu": user.kudosu
                 }
                 res.json(userResponse);  
             }          
@@ -28,7 +31,7 @@ async function startApiServices(webServer) {
     });
 
     // CREATE USER ENDPOINT
-    webServer.app.post('/api/user', (req, res) => {
+    apiRouter.route('/user').post((req, res) => {
         req.accepts('application/json');
         if (req.session.login || req.session.admin) {
             let userJson = req.json
@@ -52,11 +55,10 @@ async function startApiServices(webServer) {
     });
 
     //CREATE ITEM ENDPOINT 
-    webServer.app.post('/api/item', (req, res) => {
-        req.accepts('application/json');
+    apiRouter.route('/item').post( (req, res) => {
         if (req.session.login || req.session.admin) {
             let jsonItem = req.body;
-            console.log(jsonItem);
+            console.log(req);
             Item.create({
                 title: jsonItem.title,
                 image_url: jsonItem.image_url,
@@ -68,8 +70,11 @@ async function startApiServices(webServer) {
             res.json({"error": "not authenticated"})
         }
     });
+}
 
-
+async function startApiServices(webServer) {
+    await startRouters();
+    webServer.app.use('/api', apiRouter);
 }
 
 export default startApiServices;
