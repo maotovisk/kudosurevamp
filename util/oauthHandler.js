@@ -34,12 +34,12 @@ export default async function(expressServer) {
         }
 
         async function startOAuthCallBack(webServer, OAuthClient) {
-            webServer.app.get('/oauth/callback', (req, res) => {
-                OAuthClient.code.getToken(req.originalUrl).then(function (user) {
-                    getUserInfoByBearer(user.accessToken).then((json_users) => {
+            webServer.app.get('/oauth/callback', async (req, res) => {
+                OAuthClient.code.getToken(req.originalUrl).then(async (user) => {
+                    getUserInfoByBearer(user.accessToken).then(async (json_users) => {
                         let parsed = JSON.parse(json_users);
                         if (json_users.includes('{"avatar_url":')) {
-                            User.findOne({"osu_id": parsed.id}, (err, userDB)=> {
+                            await User.findOne({"osu_id": parsed.id}, async (err, userDB)=> {
                                 if (userDB == undefined)
                                     User.create({
                                         name: parsed.username,
@@ -52,6 +52,8 @@ export default async function(expressServer) {
                                             admin: (parsed.id == 3914271) ? true : false
                                         }
                                     });
+                                else 
+                                    await User.updateOne({"osu_id": parsed.id}, {"token": user.accessToken} );
                                 let userCredentials = {
                                     isAuthenticated: true,
                                     accessToken: user.accessToken,

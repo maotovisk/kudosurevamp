@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
         total: Number,
         available: Number
     },
-    items: [{item_id: Number}],
+    items: [{item_id: String}],
     access: {
         role_id: Number,
         admin: Boolean

@@ -66,7 +66,6 @@ async function startService() {
                 resolve(mongoose.connection);
             }).catch((e)=> {
                 console.error(mongoString);
-                
                 console.log(e)
             });
         });

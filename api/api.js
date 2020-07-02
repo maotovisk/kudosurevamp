@@ -4,6 +4,7 @@ import ItemType from '../model/itemtypes.js';
 import Role from '../model/roles.js';
 import express from 'express';
 import session from 'express-session';
+import mongoose from 'mongoose'; 
 
 const apiRouter = express.Router();
 
@@ -14,27 +15,32 @@ async function startRouters() {
     });
 
     // GET USER ENDPOINT
-    apiRouter.route('/user/:osu_id').get( (req, res) => {
-        User.findOne({"osu_id": req.params.osu_id}, (err, user) => {
+    apiRouter.route('/user/:osu_id').get(async (req, res) => {
+        await User.findOne({"osu_id": req.params.osu_id}, async (err, user) => {
             if (err || user == undefined) 
                 res.send(`{"error": "user not found"}`);
             else {
-                let userResponse = {
-                    "username": user.name,
-                    "id": user.osu_id,
-                    "items": user.items,
-                    "kudosu": user.kudosu
-                }
-                res.json(userResponse);  
-            }          
+                let itemsUser = user.items.map((item) => (`${item.item_id}`));
+                await Item.find().where('_id').in(itemsUser).exec(async (error, items) => {
+                    if (error)
+                        console.log(error)
+                    let userResponse = {
+                        "username": user.name,
+                        "id": user.osu_id,
+                        "items": items,
+                        "kudosu": user.kudosu
+                    }
+                    res.json(userResponse);  
+                });
+            }
         });
     });
 
     // CREATE USER ENDPOINT
     apiRouter.route('/user').post((req, res) => {
         req.accepts('application/json');
-        if (req.session.login || req.session.admin) {
-            let userJson = req.json
+        if (req.session.login && req.session.admin) {
+            let userJson = req.json;
             User.create({
                 name : userJson.userName,
                 osu_id: userJson.id,
@@ -56,9 +62,8 @@ async function startRouters() {
 
     //CREATE ITEM ENDPOINT 
     apiRouter.route('/item').post( (req, res) => {
-        if (req.session.login || req.session.admin) {
+        if (req.session.login && req.session.admin) {
             let jsonItem = req.body;
-            console.log(req);
             Item.create({
                 title: jsonItem.title,
                 image_url: jsonItem.image_url,
@@ -70,6 +75,53 @@ async function startRouters() {
             res.json({"error": "not authenticated"})
         }
     });
+
+    apiRouter.route('/item/buy/:item_id').post(async (req, res) => {
+        if (req.session.login && req.session.token) {
+            User.findOne({"token": req.session.token}, async (err, user)=> {
+                if (err) 
+                    return res.json('User not found');
+                Item.findById(req.params.item_id, async (error, item) => {
+                    if (error) 
+                        return res.json('Item not found');
+                    let hasItem = user.items.find((i)=> {item.item_id = i});
+                    console.log(hasItem)
+                    let canBuy = ((user.kudosu.available >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false
+                    if (canBuy) {
+                        let remainingKudosu = (user.kudosu.available - item.price);
+                        let response = await User.updateOne({"_id": user.id}, {"kudosu": {"available": remainingKudosu}, $push: {"items": {"item_id": item._id}}});
+                        res.json(response.nModified);
+                    }
+
+                })
+            })
+        } else {
+            res.json({"error": "not authenticated"})
+        }
+    });
+
+    apiRouter.route('/item/:item_id').get(async (req, res) => {
+        Item.findById(req.params.item_id, async (err, item) => {
+            if (err || item === undefined) 
+                res.send(`{"error": "item not found"}`);
+            else {
+                res.json(item); 
+            }          
+        });
+    });
+
+    apiRouter.route('/item').get(async (req, res) => {
+        await Item.find({ }, async (err, items) => {
+            if (err || items == undefined) 
+                res.send(`{"error": "items not found"}`);
+            else {
+                res.json(items); 
+            }          
+        });
+    });
+
+
+
 }
 
 async function startApiServices(webServer) {
