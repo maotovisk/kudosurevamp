@@ -10,6 +10,7 @@ const apiRouter = express.Router();
 
 async function startRouters() {
     
+    //DEFAULT RESPONSE
     apiRouter.route('/').get((req,res) => {
         res.send('{"error": "please specify the endpoint"}');
     });
@@ -23,11 +24,15 @@ async function startRouters() {
                 let itemsUser = user.items.map((item) => (`${item.item_id}`));
                 await Item.find().where('_id').in(itemsUser).exec(async (error, items) => {
                     if (error)
-                        console.log(error)
+                        console.log(error);
+                    let itemList = items.map((item)=> ({
+                        "title": item.title,
+                        "image_url": item.image_url
+                    }));
                     let userResponse = {
                         "username": user.name,
                         "id": user.osu_id,
-                        "items": items,
+                        "items": itemList,
                         "kudosu": user.kudosu
                     }
                     res.json(userResponse);  
@@ -76,6 +81,7 @@ async function startRouters() {
         }
     });
 
+    // BUY ITEM BY ID
     apiRouter.route('/item/buy/:item_id').post(async (req, res) => {
         if (req.session.login && req.session.token) {
             User.findOne({"token": req.session.token}, async (err, user)=> {
@@ -89,7 +95,7 @@ async function startRouters() {
                     let canBuy = ((user.kudosu.available >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false
                     if (canBuy) {
                         let remainingKudosu = (user.kudosu.available - item.price);
-                        let response = await User.updateOne({"_id": user.id}, {"kudosu": {"available": remainingKudosu}, $push: {"items": {"item_id": item._id}}});
+                        let response = await User.updateOne({"_id": user.id}, {"kudosu": {"available": remainingKudosu, "total": user.kudosu.total}, $push: {"items": {"item_id": item._id}}});
                         res.json(response.nModified);
                     }
 
@@ -100,6 +106,7 @@ async function startRouters() {
         }
     });
 
+    // GET ITEM 
     apiRouter.route('/item/:item_id').get(async (req, res) => {
         Item.findById(req.params.item_id, async (err, item) => {
             if (err || item === undefined) 
@@ -110,6 +117,7 @@ async function startRouters() {
         });
     });
 
+    // GET ALL ITEMS
     apiRouter.route('/item').get(async (req, res) => {
         await Item.find({ }, async (err, items) => {
             if (err || items == undefined) 
