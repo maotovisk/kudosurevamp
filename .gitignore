@@ -108,3 +108,6 @@ dist
 
 # Configuration File
 config.json
+
+# ssl credentials
+.ssl
