@@ -49,7 +49,7 @@ export default async function(expressServer) {
                                         items: [],
                                         access: {
                                             role_id: 0,
-                                            admin: (parsed.id == 3914271) ? true : false
+                                            admin: (parsed.id == 3914271)
                                         }
                                     });
                                 else 
