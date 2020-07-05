@@ -32,8 +32,8 @@ async function startService() {
         return new Promise((resolve, reject) => {
             let credentials = null;
             if (process.env.SSL) {
-                var privateKey = fs.readFileSync('/etc/ssl/private/maot.dev.key').toString();
-                var certificate = fs.readFileSync('/etc/ssl/private/maot.dev.pem').toString();
+                var privateKey = fs.readFileSync(process.env.KEY).toString();
+                var certificate = fs.readFileSync(process.env.CRT).toString();
                 credentials = {key: privateKey, cert: certificate};
             }
             const port = 7788;
