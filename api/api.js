@@ -12,14 +12,14 @@ async function startRouters() {
     
     //DEFAULT RESPONSE
     apiRouter.route('/').get((req,res) => {
-        res.send('{"error": "please specify the endpoint"}');
+        res.json({"error": "please specify the endpoint"});
     });
 
     // GET USER ENDPOINT
     apiRouter.route('/user/:osu_id').get(async (req, res) => {
         await User.findOne({"osu_id": req.params.osu_id}, async (err, user) => {
             if (err || user == undefined) 
-                res.send(`{"error": "user not found"}`);
+                res.json({"error": "json not found"});
             else {
                 let itemsUser = user.items.map((item) => (`${item.item_id}`));
                 await Item.find().where('_id').in(itemsUser).exec(async (error, items) => {
@@ -86,10 +86,10 @@ async function startRouters() {
         if (req.session.login && req.session.token) {
             User.findOne({"token": req.session.token}, async (err, user)=> {
                 if (err) 
-                    return res.json('User not found');
+                    return res.json({"error": "user not found"});
                 Item.findById(req.params.item_id, async (error, item) => {
                     if (error) 
-                        return res.json('Item not found');
+                        return res.json({"error": "item not found"});
                     let hasItem = user.items.find((i)=> {item.item_id = i});
                     console.log(hasItem)
                     let canBuy = ((user.kudosu.available >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false
@@ -97,6 +97,8 @@ async function startRouters() {
                         let remainingKudosu = (user.kudosu.available - item.price);
                         let response = await User.updateOne({"_id": user.id}, {"kudosu": {"available": remainingKudosu, "total": user.kudosu.total}, $push: {"items": {"item_id": item._id}}});
                         res.json(response.nModified);
+                    } else {
+                        res.json({"error": "coudn't complete the action"})
                     }
 
                 })
@@ -110,7 +112,7 @@ async function startRouters() {
     apiRouter.route('/item/:item_id').get(async (req, res) => {
         Item.findById(req.params.item_id, async (err, item) => {
             if (err || item === undefined) 
-                res.send(`{"error": "item not found"}`);
+                res.json({"error": "item not found"});
             else {
                 res.json(item); 
             }          
@@ -121,7 +123,7 @@ async function startRouters() {
     apiRouter.route('/item').get(async (req, res) => {
         await Item.find({ }, async (err, items) => {
             if (err || items == undefined) 
-                res.send(`{"error": "items not found"}`);
+                res.json({"error": "there are no items"});
             else {
                 res.json(items); 
             }          
