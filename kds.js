@@ -36,7 +36,7 @@ async function startService() {
                 var certificate = fs.readFileSync(process.env.CRT).toString();
                 credentials = {key: privateKey, cert: certificate};
             }
-            const port = 7788;
+            const port = (process.env.PORT) ? process.env.PORT : 7788;
             const app = express();
             const httpServer = process.env.SSL ? https.createServer(credentials, app) : app;
 
