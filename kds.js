@@ -1,6 +1,7 @@
 import OAuthHandler from './util/oauthHandler.js';
 import startApiServices from './api/api.js';
 import express from 'express';
+import https from 'https';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
@@ -29,10 +30,18 @@ async function startService() {
 
     async function startWebServer() {
         return new Promise((resolve, reject) => {
+            let credentials = null;
+            if (process.env.SSL) {
+                var privateKey = fs.readFileSync('/etc/ssl/private/maot.dev.key').toString();
+                var certificate = fs.readFileSync('/etc/ssl/private/maot.dev.pem').toString();
+                credentials = {key: privateKey, cert: certificate};
+            }
             const port = 7788;
             const app = express();
+            const httpServer = process.env.SSL ? https.createServer(credentials, app) : app;
 
-            const server = app.listen(port, () => {
+
+            const server = httpServer.listen(port, () => {
                 app.use(cookieParser());
                 app.set('view engine', 'ejs')
                 app.use(expressLayouts);
