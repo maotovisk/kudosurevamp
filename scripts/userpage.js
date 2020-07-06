@@ -12,7 +12,7 @@
 
 (function () {
     'use strict'
-    const hostname = "http://localhost:7788"
+    const hostname = "https://kudosu.maot.dev"
     const currentUser = JSON.parse($("#json-user").text());
 
     console.log(currentUser.id);

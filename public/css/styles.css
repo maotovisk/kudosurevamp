@@ -1,0 +1,39 @@
+.products-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.product {
+    display: flex;
+    flex-direction: column;
+    background: #202020;
+    padding: 10px 15px;
+    margin: 10px 15px;
+    justify-content: center;
+    align-self: center;
+    border-radius: 10px;
+    transition: transform ease-in-out 0.2s;
+}
+.product:hover {
+    transform: scale(1.03);
+}
+
+.product-title {
+    text-align: center;
+    padding-bottom: 15px;
+}
+.product-description {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding-bottom: 15px;
+}
+.product-image {
+    width: auto;
+    height: auto;
+    padding-bottom: 15px;
+}
+.product-buy {
+    text-align: center;
+}

@@ -8,6 +8,7 @@ import session from 'express-session';
 import expressLayouts from 'express-ejs-layouts';
 import fs from 'fs';
 import mongoose from 'mongoose';
+import { hostname } from 'os';
 
 const config = JSON.parse(fs.readFileSync('./config.json','utf-8'));
 
@@ -60,7 +61,7 @@ async function startService() {
                     next();
                 });
 
-                console.log(`Webserver started at http://localhost:${port}`)
+                console.log(`Webserver started at http://${process.env.HOSTNAME}:${port}`)
                 resolve({
                     app,
                     server
@@ -104,7 +105,8 @@ async function startService() {
         })
         webServer.app.get('/store', (req, res) => {
             if (req.cookies.credentials && req.session.login) {
-                    res.render("pages/store.ejs", {user: req.cookies.credentials});
+                let port = (process.env.PORT) ? process.env.PORT : 7788;
+                    res.render("pages/store.ejs", {user: req.cookies.credentials, server: {hostname: process.env.HOSTNAME, port: port}});
                 } else {
                     res.render("pages/indexNotLoggedIn.ejs");
                 }

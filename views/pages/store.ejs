@@ -6,26 +6,57 @@
     }); %>
 
 <div class="container mt-5">
+    <div class="alert hidden" id="alert" role="alert">
+      </div>
     <div class="jumbotron pr-3 pr-3">
         <p class="lead">You have <%= user.kudosu.available %> kudosu available.</p>
-    </div>
-    <div class="products">
-        <div class="controls">
-
-        </div>
-        <div class="products-list">
-
+        <div class="products">
+            <div class="controls">
+            </div>
+            <div class="products-list">
+            </div>
         </div>
     </div>
 </div>
 <script>        
+let items = [];
 fetch("/api/item", {method: 'GET'}).then((response)=> {return response.text();
-}).then(function(json) {
-    let jsonItems = JSON.parse(json);
-    console.log(json)
-    for (item of jsonItems) {
-        $(".products-list").append("<div class='product'>" + item.title +"<img class='product-image' src='"+ item.image_url +"'> </img> </div>");
-    }
+}).then( async (json) => {
+    fetch("/api/user/<%-user.userId %>", {method: 'GET'}).then((response2)=> {return response2.text();
+}).then( async (user) =>{
+        let jsonItems = JSON.parse(json);
+        let jsonUser = JSON.parse(user);
+        items = jsonItems;
+        for (item of jsonItems) {
+            $(".products-list").append("<div class='product'><div class='product-title'>" + item.title +" </div><div class='product-description'><div><img class='product-image' src='"+ item.image_url +"'> </img></div> <div>Cost: " + item.price + " kudosu</x div> </div> <div class='product-buy'>" + ((jsonUser.items.find((a) => a.title == item.title) == undefined) ? ("<btn class='btn btn-danger' id='" + item.id + "' onclick='buyProduct()'>Buy </btn>") : "<btn class='btn btn-primary disabled'>Already Owned</btn> ") +"</div> </div>");
+        }
+    })
 });
+function buyProduct() {
+    let productId = $(this).attr("id");
+    let headers = new Headers();
+    let hostname = "<%- server.hostname %>";
+
+    let loading = `<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-repeat" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M2.854 7.146a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L2.5 8.207l1.646 1.647a.5.5 0 0 0 .708-.708l-2-2zm13-1a.5.5 0 0 0-.708 0L13.5 7.793l-1.646-1.647a.5.5 0 0 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0 0-.708z"/>
+  <path fill-rule="evenodd" d="M8 3a4.995 4.995 0 0 0-4.192 2.273.5.5 0 0 1-.837-.546A6 6 0 0 1 14 8a.5.5 0 0 1-1.001 0 5 5 0 0 0-5-5zM2.5 7.5A.5.5 0 0 1 3 8a5 5 0 0 0 9.192 2.727.5.5 0 1 1 .837.546A6 6 0 0 1 2 8a.5.5 0 0 1 .501-.5z"/>
+</svg>`;
+    $(this).text(loading);
+    fetch(`https://${hostname}/api/item/buy/${productId}`,
+        {
+            method: "POST",
+            headers: headers
+        })
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+            $("#alert").text("You have bought the item '" +items.find((a) => a.id == productId).title +"'.");
+            $("#alert").addClass("alert-success");
+            $("#alert").removeClass("hidden");
+        }).catch((e) => {
+            $("#alert").text("Something went wrong!");
+            $("#alert").addClass("alert-danger");
+            $("#alert").removeClass("hidden");
+        });
+}
             
 </script>
