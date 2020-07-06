@@ -90,7 +90,7 @@ async function startRouters() {
                 Item.findById(req.params.item_id, async (error, item) => {
                     if (error) 
                         return res.json({"error": "item not found"});
-                    let hasItem = user.items.find((i)=> {item.item_id = i});
+                    let hasItem = !(user.items.find((i)=> {item.item_id = i}) == undefined);
                     console.log(hasItem)
                     let canBuy = ((user.kudosu.available >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false
                     if (canBuy) {
