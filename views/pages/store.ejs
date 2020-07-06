@@ -35,7 +35,7 @@ fetch("/api/item", {method: 'GET'}).then((response)=> {return response.text();
 });
 const buyItem = (e) =>{
     let productId = e;
-    let clickedButton = $("btn[data-origin="+ e +"]");
+    let clickedButton = $("button[data-origin='"+ e +"']");
     let headers = new Headers();
     let hostname = "<%- server.hostname %>";
 
