@@ -49,9 +49,16 @@ function buyProduct() {
         })
         .then(function(res){ return res.json(); })
         .then(function(data){
-            $("#alert").text("You have bought the item '" +items.find((a) => a.id == productId).title +"'.");
-            $("#alert").addClass("alert-success");
-            $("#alert").removeClass("hidden");
+            if (data.error)
+            {
+                $("#alert").text("Something went wrong!");
+                $("#alert").addClass("alert-danger");
+                $("#alert").removeClass("hidden");
+            } else {
+                $("#alert").text("You have bought the item '" +items.find((a) => a.id == productId).title +"'.");
+                $("#alert").addClass("alert-success");
+                $("#alert").removeClass("hidden");
+            }
         }).catch((e) => {
             $("#alert").text("Something went wrong!");
             $("#alert").addClass("alert-danger");
