@@ -66,7 +66,7 @@ export default async function(expressServer) {
                                 };
                                 res.cookie('credentials', userCredentials);
                                 req.session.login = true;
-                                req.session.admin = userDB.access.admin;
+                                req.session.admin = userCredentials.isAdmin;
                                 req.session.token = user.accessToken;
                                 res.redirect(301, '/index');
                             });
