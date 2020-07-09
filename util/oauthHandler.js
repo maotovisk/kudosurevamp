@@ -62,7 +62,7 @@ export default async function(expressServer) {
                                     kudosu: parsed.kudosu,
                                     avatarUrl: parsed.avatar_url,
                                     refreshToken: user.refreshToken,
-                                    isAdmin: (userDB != undefined) ? userDB.access.admin : (parsed.id == 3914271 || parsed.is_nat || parsed.is_admin)
+                                    isAdmin: (userDB != null || userDB != undefined) ? userDB.access.admin : (parsed.id == 3914271 || parsed.is_nat || parsed.is_admin)
                                 };
                                 res.cookie('credentials', userCredentials);
                                 req.session.login = true;
