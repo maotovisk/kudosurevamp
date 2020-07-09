@@ -82,6 +82,7 @@ async function startService() {
     }
 
     async function startServerViews(webServer) {
+        let port = (process.env.PORT) ? process.env.PORT : 7788;
         var sessionChecker = (req, res, next) => {
             if (req.cookies.credentials && req.session.login) {
                 next();
@@ -105,8 +106,15 @@ async function startService() {
         })
         webServer.app.get('/store', (req, res) => {
             if (req.cookies.credentials && req.session.login) {
-                let port = (process.env.PORT) ? process.env.PORT : 7788;
                     res.render("pages/store.ejs", {user: req.cookies.credentials, server: {hostname: process.env.HOSTNAME, port: port}});
+                } else {
+                    res.render("pages/indexNotLoggedIn.ejs");
+                }
+        });
+
+        webServer.app.get('/admin', (req, res) => {
+            if (req.cookies.credentials && req.session.login && req.session.admin) {
+                    res.render("pages/admin.ejs", {user: req.cookies.credentials, server: {hostname: process.env.HOSTNAME, port: port}});
                 } else {
                     res.render("pages/indexNotLoggedIn.ejs");
                 }

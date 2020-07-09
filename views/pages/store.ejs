@@ -1,6 +1,6 @@
 <%- contentFor('body') %><%- include('elements/navbar', {
     nav: {
-        "items": [{"title": "Home", "href": "/"}, {"title": "Store", "active": true}],
+        "items": [{"title": "Home", "href": "/"}, {"title": "Store", "active": true}, ((user.isAdmin) ? {"title": "Admin", "href": "/admin"} : {})],
         "login": true
     }
     }); %>
@@ -29,7 +29,7 @@ fetch("/api/item", {method: 'GET'}).then((response)=> {return response.text();
         let jsonUser = JSON.parse(user);
         items = jsonItems;
         for (item of jsonItems) {
-            $(".products-list").append("<div class='product'><div class='product-title'>" + item.title +" </div><div class='product-description'><div><img class='product-image' src='"+ item.image_url +"'> </img></div> <div>Cost: " + item.price + " kudosu</x div> </div> <div class='product-buy'>" + ((jsonUser.items.find((a) => a.title == item.title) == undefined) ? ("<button class='btn btn-danger button-buy' id='button-buy' onclick='buyItem(\"" + item._id + "\")' data-origin='" + item._id + "'>Buy</button>") : "<btn class='btn btn-primary disabled'>Already Owned</btn> ") +"</div> </div>");
+            $(".products-list").append("<div class='product'><div class='product-title'>" + item.title +" </div><div class='product-description'><div><img class='product-image' src='"+ item.image_url +"'> </img></div> <div>Unlock at " + item.price + " kudosu</x div> </div> <div class='product-buy'>" + ((jsonUser.items.find((a) => a.title == item.title) == undefined) ? ("<button class='btn btn-danger button-buy' id='button-buy' onclick='buyItem(\"" + item._id + "\")' data-origin='" + item._id + "'>Unlock</button>") : "<btn class='btn btn-primary disabled'>Already Unlocked</btn> ") +"</div> </div>");
         }
     })
 });
@@ -60,10 +60,10 @@ const buyItem = (e) =>{
                 $("#alert").removeClass("hidden");
                 clickedButton.text("Buy");
             } else {
-                $("#alert").text("You have bought the item '" +items.find((a) => a._id == productId).title +"'.");
+                $("#alert").text("You have unlocked the item '" +items.find((a) => a._id == productId).title +"'.");
                 $("#alert").addClass("alert-success");
                 $("#alert").removeClass("hidden");
-                clickedButton.text("Already Owned");
+                clickedButton.text("Already Unlocked");
                 clickedButton.addClass("disabled");
                 clickedButton.removeAttr("onclick");
             }

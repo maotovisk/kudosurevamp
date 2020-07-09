@@ -73,7 +73,8 @@ async function startRouters() {
                 title: jsonItem.title,
                 image_url: jsonItem.image_url,
                 price: jsonItem.price,
-                userRole: jsonItem.userRole
+                is_consumable: jsonItem.is_consumable,
+                user_role: jsonItem.user_role
             })
             res.json({"message": "OK"});
         } else {
@@ -92,10 +93,12 @@ async function startRouters() {
                         return res.json({"error": "item not found"});
                     let hasItem = !(user.items.find((i)=> {item.item_id = i}) == undefined);
                     console.log(hasItem)
-                    let canBuy = ((user.kudosu.available >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false
-                    if (canBuy) {
+                    let canBuy = ((user.kudosu.available >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false;
+                    let canUnlock = ((user.kudosu.total >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false;
+                    if (canUnlock || canBuy) {
+                        let isConsummable = item.is_consumable;
                         let remainingKudosu = (user.kudosu.available - item.price);
-                        let response = await User.updateOne({"_id": user.id}, {"kudosu": {"available": remainingKudosu, "total": user.kudosu.total}, $push: {"items": {"item_id": item._id}}});
+                        let response = await User.updateOne({"_id": user.id}, { "kudosu": {"available": (isConsummable ? (remainingKudosu) : user.kudosu.available), "total": user.kudosu.total},  $push: {"items": {"item_id": item._id}}});
                         res.json(response.nModified);
                     } else {
                         res.json({"error": "coudn't complete the action"})

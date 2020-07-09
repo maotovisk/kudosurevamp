@@ -1,6 +1,6 @@
 <%- contentFor('body') %><%- include('elements/navbar', {
     nav: {
-        "items": [{"title": "Home","href": "/", "active": true}, {"title": "Store", "href": "/store"}],
+        "items": [{"title": "Home","href": "/", "active": true}, {"title": "Store", "href": "/store"}, ((user.isAdmin) ? {"title": "Admin", "href": "/admin"} : {})],
         "login": true
     }
     }); %>

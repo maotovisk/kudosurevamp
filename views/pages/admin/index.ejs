@@ -1,0 +1,13 @@
+<%- contentFor('body') %>
+<%- include('../elements/navbar', {
+    nav: {
+        "items": [{"title": "Home","href": "/"}, {"title": "Store", "href": "/store"}, {"title": "Admin", "href": "/admin", "active": true} ],
+        "login": true
+    }
+}); %>
+
+<div class="container mt-5">
+    <div class="jumbotron pr-3 pr-3">
+        <h1 class="display-5">Welcome, <%= user.username %> </h1>
+    </div>
+</div>

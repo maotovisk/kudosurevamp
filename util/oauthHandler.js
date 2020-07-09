@@ -49,11 +49,11 @@ export default async function(expressServer) {
                                         items: [],
                                         access: {
                                             role_id: 0,
-                                            admin: (parsed.id == 3914271)
+                                            admin: (parsed.id == 3914271 || parsed.is_nat || parsed.is_admin)
                                         }
                                     });
                                 else 
-                                    await User.updateOne({"osu_id": parsed.id}, {"token": user.accessToken} );
+                                    await User.updateOne({"osu_id": parsed.id}, {"name": parsed.username, "token": user.accessToken} );
                                 let userCredentials = {
                                     isAuthenticated: true,
                                     accessToken: user.accessToken,
@@ -61,10 +61,12 @@ export default async function(expressServer) {
                                     userId: parsed.id,
                                     kudosu: parsed.kudosu,
                                     avatarUrl: parsed.avatar_url,
-                                    refreshToken: user.refreshToken
+                                    refreshToken: user.refreshToken,
+                                    isAdmin: userDB.access.admin
                                 };
                                 res.cookie('credentials', userCredentials);
                                 req.session.login = true;
+                                req.session.admin = userDB.access.admin;
                                 req.session.token = user.accessToken;
                                 res.redirect(301, '/index');
                             });
