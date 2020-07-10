@@ -1,5 +1,6 @@
-main {
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
+main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
