@@ -5,10 +5,45 @@
     }
     }); %>
 
-<div class="container mt-5">
-    <div class="jumbotron pr-3 pr-3">
-        <h1 class="display-5">Welcome, <%= user.username %> </h1>
-        <p class="lead">You are authenticated.</p>
-        <p>Total kudosu: <%= user.kudosu.total %></p>
+<div class="container mt-5 page-content">
+
+    <div class="jumbotron pr-0 pl-0 pt-0 pb-0">
+
+        <!---<p><%= user.username %>,
+            Total kudosu: <%= user.kudosu.total %></p>--->
+        
+        <div class="d-flex justify-content-center mt-2 bg-green main-title-align">
+            <div>
+
+                <h1 class="display-5">Get Started</h1>
+
+            </div>
+        </div>
+        
+        <div class="container">
+
+            <div class="row pt-4 pb-4 bg-fake-rocketseat">
+
+                <div class="col ml-4 br-solid">
+
+                    <h4 class = "pb-3">Install the Extension</h2>
+                    <p class="lead">To go through the full experience of the project, make sure to install the <a href="https://www.tampermonkey.net/">Tampermonkey extension</a>,
+                    you will be able to insert our script on it. It will apply new cool things to the <a href="https://osu.ppy.sh">osu! site</a> </p>
+
+                </div>
+
+
+                <div class="col mr-4">
+
+                    <h4 class = "pb-3">Download Script</h4>
+                    <p class="lead">By clicling <a href="https://github.com/maotovisk/kudosurevamp/raw/master/scripts/kudosu.user.js">here</a> you can download the script that will be then applied to your tampermonkey extension.</p>
+                
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </div>

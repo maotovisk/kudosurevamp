@@ -3087,7 +3087,7 @@ textarea.form-control.is-invalid {
     padding: 0.375rem 0.75rem;
     font-size: 0.9375rem;
     line-height: 1.5;
-    border-radius: 0.25rem;
+    border-radius: 500px;
     -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -3127,14 +3127,14 @@ textarea.form-control.is-invalid {
   
   .btn-primary {
     color: #fff;
-    background-color: #325D88;
-    border-color: #325D88;
+    background-color: #5AA95A;
+    border-color: #5AA95A;
   }
   
   .btn-primary:hover {
     color: #fff;
-    background-color: #284a6c;
-    border-color: #244463;
+    background-color: #52b452;
+    border-color: #52b452;
   }
   
   .btn-primary:focus, .btn-primary.focus {

@@ -1,3 +1,55 @@
+main{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+
+}
+
+.page-content{
+
+    flex-grow: 1;
+
+}
+
+.bg-black{
+
+    background-color: #121212;
+
+}
+
+.bg-fake-rocketseat{
+
+    background-color: #2E3047;
+
+}
+
+.bg-green{
+
+    background-color: #5AA95A;
+
+}
+
+.main-title-align{
+
+    padding: 75px 0px 75px 0px;
+
+}
+
+.br-solid{
+
+    border-right: solid;
+    border-width: 0.1em;
+
+}
+
+.alert-hidden{
+
+    display: none;
+
+}
+
 .products-list {
     display: flex;
     flex-wrap: wrap;

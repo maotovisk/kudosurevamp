@@ -5,8 +5,8 @@
     }
     }); %>
 
-<div class="container mt-5">
-    <div class="alert hidden" id="alert" role="alert">
+<div class="container mt-5 page-content">
+    <div class="alert alert-hidden" id="alert" role="alert">
       </div>
     <div class="jumbotron pr-3 pr-3">
         <p class="lead">You have <%= user.kudosu.available %> kudosu available.</p>
@@ -57,12 +57,12 @@ const buyItem = (e) =>{
             {
                 $("#alert").text("Something went wrong!");
                 $("#alert").addClass("alert-danger");
-                $("#alert").removeClass("hidden");
+                $("#alert").removeClass("alert-hidden");
                 clickedButton.text("Buy");
             } else {
                 $("#alert").text("You have unlocked the item '" +items.find((a) => a._id == productId).title +"'.");
                 $("#alert").addClass("alert-success");
-                $("#alert").removeClass("hidden");
+                $("#alert").removeClass("alert-hidden");
                 clickedButton.text("Already Unlocked");
                 clickedButton.addClass("disabled");
                 clickedButton.removeAttr("onclick");
@@ -71,7 +71,7 @@ const buyItem = (e) =>{
             console.log(e)
             $("#alert").text("Something went wrong!");
             $("#alert").addClass("alert-danger");
-            $("#alert").removeClass("hidden");
+            $("#alert").removeClass("alert-hidden");
         });
 };
             
