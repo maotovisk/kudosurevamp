@@ -8,18 +8,41 @@
 <div class="container my-5 page-content">
     <div class="alert alert-hidden" id="alert" role="alert">
     </div>
-    <div class="d-flex justify-content-center  mt-2 bg-light-dark px-1 py-2 bt-round">
-        <span >You have <%= user.kudosu.available %> kudosu available.</span>
-    </div>
+
+    <div>
+
+        <div class="bg-green bt-round">
+
+            <h2 class="mb-0 py-4 px-4 page-title">Store</h2>
+
+        </div>
+
+        <div class="d-flex justify-content-center  mt-0 bg-light-dark px-1 py-2">
+
+            <span >You have <%= user.kudosu.available %> kudosu available.</span>
+
+        </div>
+
+    
+
     <div class="bg-dark bb-round px-1 py-2">
+
             <div class="products">
+
                 <div class="controls">
                     <!-- todo -->
                 </div>
+
                 <div class="products-list">
+
                 </div>
+
             </div>
+
     </div>
+
+    </div>
+
 </div>
 <script>        
 let items = [];
