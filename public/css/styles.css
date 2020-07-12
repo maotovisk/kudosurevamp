@@ -76,10 +76,6 @@ main {
     justify-content: center;
     align-self: center;
     border-radius: 10px;
-    transition: transform ease-in-out 0.2s;
-}
-.product:hover {
-    transform: scale(1.03);
 }
 
 .product-title {
@@ -143,3 +139,12 @@ main {
     background-color: #454545;
 }
 
+input[type=text], select {
+    width: 100%;
+    padding: 8px 15px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }

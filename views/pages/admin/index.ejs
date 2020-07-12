@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-center  mt-2 bg-light-dark px-1 py-2 bt-round">
         <span>Admin Panel</span>
     </div>
-    <div class="bg-dark bb-round px-1 py-2">
+    <div class="bg-dark px-1 py-2">
         <div class="grid-admin">
             <div class="admin-sidebar">
                 <ul class="admin-nav">
@@ -19,7 +19,7 @@
                     <li class="admin-nav-item">Test</li>
                     <li class="admin-nav-item">Test</li>
                 </ul>
-        
+
             </div>
             <div class="admin-content">
                 <div class="admin-controller">
@@ -30,4 +30,175 @@
             </div>
         </div>
     </div>
+
+    <div class="bb-round container px-4 bg-fake-rocketseat">
+
+
+        <form action="" id="createItemForm" class="container">
+
+            <h3 class="pt-4">Create Item</h3>
+
+            <div class="row">
+
+            <div class="col-4">
+
+                <label for="item_name">Item Name</label>
+                <input type="text" id="item_name" name="item_name" placeholder="Item Name">
+
+                <label for="price">Price</label>
+                <input type="text" id="price" name="price" placeholder="500">
+
+            </div>
+
+            <div class="col-4">
+
+                <label for="image_url">Image URL</label>
+                <input type="text" id="image_url" name="image_url" placeholder="https://seto.kousuke/nat.jpg">
+
+                <label for="coin_type">Coin Type</label>
+                <select id="coin_type" name="coin_type">
+                    <option value="select">Select Option</option>
+                    <option value="kudosu">Kudosu</option>
+                    <option value="qactivity">QActivity</option>
+                </select>
+
+            </div>
+
+            <div class="col-4">
+
+                <label for="user_role">User Role (Number)</label>
+                <input type="text" id="user_role" name="user_role" placeholder="2">
+
+                <label for="consumable">Is it Consumable?</label>
+                <select id="consumable" name="consumable">
+                    <option value="select">Select Option</option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+
+            </div>
+
+            </div>
+
+            <div class="row justify-content-center bb-round px-4 pb-4 d-flex">
+
+            <input class="btn btn-primary mt-4 px-4" type="submit" value="Submit">
+
+            </div>
+
+            <div class="error-class row justify-content-center bb-round px-4 pb-4 d-flex flex-column text-center">
+                
+                <!--- javascript append -->
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
+
+<script>
+
+    $("#createItemForm").submit(e => {
+
+        //this function won't let the browser refresh or open a new tab
+        e.preventDefault();
+
+        let coinvar = document.getElementById("coin_type");
+        let coinOption = coinvar.options[coinvar.selectedIndex].value;
+
+        let consumablevar = document.getElementById("consumable");
+        let consumableOption = consumablevar.options[consumablevar.selectedIndex].value;
+
+        /*
+         * Validation process of form Create Item starts here
+         */
+
+        item_name_filtered = item_name.value.replace(/ /g,'');
+        image_url_filtered = image_url.value.replace(/ /g,'');
+
+        //removes all previously triggered errors
+
+        if(document.getElementById("lowvalue")) document.getElementById("lowvalue").remove();
+        if(document.getElementById("invalidname")) document.getElementById("invalidname").remove();
+        if(document.getElementById("addcoin")) document.getElementById("addcoin").remove();
+        if(document.getElementById("addconsumable")) document.getElementById("addconsumable").remove();
+        if(document.getElementById("role")) document.getElementById("role").remove();
+        if(document.getElementById("urlerror")) document.getElementById("urlerror").remove();
+
+        //price validation
+
+        if(price.value < 500){
+            
+            $(".error-class").append(` 
+            
+            <p id="lowvalue" style="color: red">Your price is too low, people should spend more points for them to be worth a reward</p>
+            
+            `);
+
+        }
+
+        //name validation
+
+        if(item_name_filtered == null || item_name_filtered == ""){
+            
+            $(".error-class").append(` 
+            
+            <p id="invalidname" style="color: red">Your item name is invalid!</p>
+            
+            `);
+
+        }
+
+        //coin validation
+
+        if(coinOption == "select"){
+            
+            $(".error-class").append(` 
+            
+            <p id="addcoin" style="color: red">You must select a coin option</p>
+            
+            `);
+
+        }
+
+        //image validation
+
+        if(image_url_filtered == null || image_url_filtered == ""){
+
+            $(".error-class").append(` 
+            
+            <p id="urlerror" style="color: red">You must add an image link</p>
+            
+            `);
+
+        }
+
+        //consumable validation
+
+        if(consumableOption == "select"){
+            
+            $(".error-class").append(` 
+            
+            <p id="addconsumable" style="color: red">You must select if an item is consumable or not</p>
+            
+            `);
+
+        }
+
+        //role validation
+
+        if( user_role.value == "" || user_role.value.isInteger() ){
+            
+            $(".error-class").append(` 
+            
+            <p id="role" style="color: red">User role is invalid</p>
+            
+            `);
+
+        }
+
+    })
+
+</script>
