@@ -69,14 +69,21 @@ async function startRouters() {
     apiRouter.route('/item').post( (req, res) => {
         if (req.session.login && req.session.admin) {
             let jsonItem = req.body;
+            console.log(req.body)
+            if (req.body.title == undefined || req.body.image_url == undefined || req.body.price == undefined)
+                return res.json({"error": "error parsing body"})
             Item.create({
                 title: jsonItem.title,
                 image_url: jsonItem.image_url,
                 price: jsonItem.price,
                 is_consumable: jsonItem.is_consumable,
                 user_role: jsonItem.user_role
+            }).then((document) => {
+                res.json({"message": "OK"});
+
+            }).catch((err) => {
+                res.json({"error": "something went wrong"})
             })
-            res.json({"message": "OK"});
         } else {
             res.json({"error": "not authenticated"})
         }

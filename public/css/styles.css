@@ -10,7 +10,6 @@ main {
 
 .page-content {
     flex-grow: 1;
-    border-radius: 5% !important;
 }
 
 .page-title{

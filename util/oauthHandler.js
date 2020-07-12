@@ -64,7 +64,8 @@ export default async function(expressServer) {
                                     refreshToken: user.refreshToken,
                                     isAdmin: (userDB != null || userDB != undefined) ? userDB.access.admin : (parsed.id == 3914271 || parsed.is_nat || parsed.is_admin)
                                 };
-                                res.cookie('credentials', userCredentials, {"maxAge": new Date(Date.now() + 28800)});
+                                res.cookie('credentials', userCredentials, {"maxAge": 28800000});
+                                req.session.cookie.maxAge = 28800000;
                                 req.session.login = true;
                                 req.session.admin = userCredentials.isAdmin;
                                 req.session.token = user.accessToken;

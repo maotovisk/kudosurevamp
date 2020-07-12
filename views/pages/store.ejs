@@ -91,12 +91,12 @@
         let productId = e;
         let clickedButton = $("button[data-origin='" + e + "']");
         let headers = new Headers();
-        let hostname = "<%- server.hostname %>";
+        let hostname = window.location.protocol;
 
         let loading = `<span class="material-icons">refresh</span>`;
         clickedButton.html(loading);
         console.log(productId);
-        fetch(`https://${hostname}/api/item/buy/${productId}`, {
+        fetch(`${hostname}/api/item/buy/${productId}`, {
                 method: "POST",
                 headers: headers
             })

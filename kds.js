@@ -50,7 +50,7 @@ async function startService() {
                   resave: false,
                   saveUninitialized: false,
                   cookie: {
-                    expires: 600000
+                    expires: 28800000
                 }}));
                 app.use(bodyParser.urlencoded({ extended: true }));
                 app.use(bodyParser.json());

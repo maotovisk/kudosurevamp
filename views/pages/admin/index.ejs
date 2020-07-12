@@ -11,8 +11,11 @@
         <span>Admin Panel</span>
     </div>
     <div class="bg-dark px-1 py-2">
+
         <div class="grid-admin">
+
             <div class="admin-sidebar">
+
                 <ul class="admin-nav">
                     <li class="admin-nav-item admin-nav-item-active">Test</li>
                     <li class="admin-nav-item">Test</li>
@@ -22,67 +25,71 @@
 
             </div>
             <div class="admin-content">
+
                 <div class="admin-controller">
                 </div>
+
                 <div class="py-1 px-2 admin-page">
                     <h5>Admin </h5>
                 </div>
+
             </div>
         </div>
     </div>
 
     <div class="bb-round container px-4 bg-fake-rocketseat">
-
-
+        <div class="alert alert-hidden" id="alert" role="alert">
+        </div>
         <form action="" id="createItemForm" class="container">
 
             <h3 class="pt-4">Create Item</h3>
 
             <div class="row">
 
-            <div class="col-4">
+                <div class="col-4">
+                    <label for="item_name">Item Name</label>
+                    <input class="form-control" type="text" id="item_name" name="item_name" placeholder="Item Name">
+                </div>
 
-                <label for="item_name">Item Name</label>
-                <input type="text" id="item_name" name="item_name" placeholder="Item Name">
+                <div class="col-2">
+                    <label for="price">Price</label>
+                    <input class="form-control" type="text" id="price" name="price" placeholder="500">
+                </div>
 
-                <label for="price">Price</label>
-                <input type="text" id="price" name="price" placeholder="500">
-
-            </div>
-
-            <div class="col-4">
-
-                <label for="image_url">Image URL</label>
-                <input type="text" id="image_url" name="image_url" placeholder="https://seto.kousuke/nat.jpg">
-
-                <label for="coin_type">Coin Type</label>
-                <select id="coin_type" name="coin_type">
-                    <option value="select">Select Option</option>
-                    <option value="kudosu">Kudosu</option>
-                    <option value="qactivity">QActivity</option>
-                </select>
+                <div class="col-6">
+                    <label for="image_url">Image URL</label>
+                    <input type="text" id="image_url" name="image_url" placeholder="https://seto.kousuke/nat.jpg">
+                </div>  
 
             </div>
+            <div class="row">
 
-            <div class="col-4">
+                <div class="col-2">
+                    <label for="user_role">User Role (Number)</label>
+                    <input class="form-control" type="text" id="user_role" name="user_role" placeholder="2">
+                </div>
 
-                <label for="user_role">User Role (Number)</label>
-                <input type="text" id="user_role" name="user_role" placeholder="2">
+                <div class="col-4">
+                    <label for="coin_type">Coin Type</label>
+                    <select class="form-control" id="coin_type" name="coin_type">
+                        <option value="select">Select Option</option>
+                        <option value="kudosu">Kudosu</option>
+                        <option value="qactivity">QActivity</option>
+                    </select>
+                </div>
 
-                <label for="consumable">Is it Consumable?</label>
-                <select id="consumable" name="consumable">
-                    <option value="select">Select Option</option>
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-
-            </div>
+                <div class="col-6 d-flex align-text-bottom d-flex align-items-center justify-content-center">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="consumable" name="consumable">
+                        <label class="custom-control-label" for="consumable">Is it consumable?</label>
+                    </div>
+                </div>
 
             </div>
 
             <div class="row justify-content-center bb-round px-4 pb-4 d-flex">
 
-            <input class="btn btn-primary mt-4 px-4" type="submit" value="Submit">
+                <input class="btn btn-primary mt-4 px-4" type="submit" value="Create Item">
 
             </div>
 
@@ -109,7 +116,7 @@
         let coinOption = coinvar.options[coinvar.selectedIndex].value;
 
         let consumablevar = document.getElementById("consumable");
-        let consumableOption = consumablevar.options[consumablevar.selectedIndex].value;
+        let consumableOption = consumablevar.value;
 
         /*
          * Validation process of form Create Item starts here
@@ -129,11 +136,13 @@
 
         //price validation
 
-        if(price.value < 500){
-            
+        let errors = false;
+
+        if(price.value < 500 || Number.isInteger(parseInt(price.value)) == false){
+            console.log(price.value)
             $(".error-class").append(` 
             
-            <p id="lowvalue" style="color: red">Your price is too low, people should spend more points for them to be worth a reward</p>
+            <p id="lowvalue" style="color: red">Your price is too low or invalid, people should spend more points for them to be worth a reward</p>
             
             `);
 
@@ -141,8 +150,9 @@
 
         //name validation
 
-        if(item_name_filtered == null || item_name_filtered == ""){
+        if(item_name_filtered == null || item_name_filtered == "") {
             
+            errors = true;
             $(".error-class").append(` 
             
             <p id="invalidname" style="color: red">Your item name is invalid!</p>
@@ -153,8 +163,9 @@
 
         //coin validation
 
-        if(coinOption == "select"){
-            
+        if(coinOption == "select") {
+
+            errors = true;            
             $(".error-class").append(` 
             
             <p id="addcoin" style="color: red">You must select a coin option</p>
@@ -167,6 +178,7 @@
 
         if(image_url_filtered == null || image_url_filtered == ""){
 
+            errors = true;
             $(".error-class").append(` 
             
             <p id="urlerror" style="color: red">You must add an image link</p>
@@ -177,8 +189,9 @@
 
         //consumable validation
 
-        if(consumableOption == "select"){
+        if(consumableOption == "select") {
             
+            errors = true;
             $(".error-class").append(` 
             
             <p id="addconsumable" style="color: red">You must select if an item is consumable or not</p>
@@ -189,16 +202,62 @@
 
         //role validation
 
-        if( user_role.value == "" || user_role.value.isInteger() ){
+        if( user_role.value == "" || Number.isInteger(parseInt(user_role.value)) == false) { 
+            console.log(user_role.value)
             
+            errors = true;
             $(".error-class").append(` 
             
             <p id="role" style="color: red">User role is invalid</p>
             
             `);
-
         }
 
+        if (!errors) {
+            let form = document.getElementById('createItemForm')
+            let formData = new FormData(form);
+            let jsonData  = Object.fromEntries(formData);
+            let hostname = window.location.protocol;
+            let headers = new Headers();
+            headers.append("Content-Type", 'application/json');
+            console.log(jsonData);
+            let jsonRequest = {
+                title: jsonData.item_name,
+                image_url: jsonData.image_url,
+                price: jsonData.price,
+                is_consumable: (jsonData.is_consumable == 'on') ? true : false,
+                user_role: jsonData.user_role //should default to zero
+            }
+                       
+
+            fetch(`${hostname}/api/item`, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(jsonRequest)
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (data) {
+                console.log(data);
+                if (data.error) {
+                    $("#alert").text("Something went wrong!");
+                    $("#alert").addClass("alert-danger");
+                    $("#alert").removeClass("alert-hidden");
+                } else {
+                    $("#alert").text("You have succefully added the item " + jsonRequest.title +".");
+                    $("#alert").addClass("alert-success");
+                    $("#alert").removeClass("alert-hidden");
+                }
+            }).catch((e) => {
+                console.log(e)
+                $("#alert").text("Something went wrong!");
+                $("#alert").addClass("alert-danger");
+                $("#alert").removeClass("alert-hidden");
+            });
+
+        }
+        
     })
 
 </script>
