@@ -109,7 +109,7 @@
                     $("#alert").text("Something went wrong!");
                     $("#alert").addClass("alert-danger");
                     $("#alert").removeClass("alert-hidden");
-                    clickedButton.text("Buy");
+                    clickedButton.text("Unlock");
                 } else {
                     $("#alert").text("You have unlocked the item '" + items.find((a) => a._id == productId)
                         .title + "'.");
@@ -117,6 +117,8 @@
                     $("#alert").removeClass("alert-hidden");
                     clickedButton.text("Already Unlocked");
                     clickedButton.addClass("disabled");
+                    clickedButton.removeClass("btn-danger")
+                    clickedButton.addClass("btn-primary");
                     clickedButton.removeAttr("onclick");
                 }
             }).catch((e) => {
