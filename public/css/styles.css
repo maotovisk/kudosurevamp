@@ -6,26 +6,22 @@ main {
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
-
 }
 
 .page-content {
-
     flex-grow: 1;
     border-radius: 5% !important;
-
 }
 
 .page-title{
-
     font-family: 'Comfortaa', sans-serif, cursive;
-
 }
 
 .bg-black {
-
     background-color: #202020;
-
+}
+.bg-pink {
+    background-color: #8a3978;
 }
 
 .bg-light-dark {
@@ -33,28 +29,20 @@ main {
 }
 
 .bg-fake-rocketseat {
-
     background-color: #2E3047;
-
 }
 
 .bg-green {
-
     background-color: #5AA95A;
-
 }
 
 .main-title-align {
-
     padding: 75px 0px 75px 0px;
-
 }
 
 .br-solid{
-
     border-right: solid;
     border-width: 0.1em;
-
 }
 
 .bt-round {
