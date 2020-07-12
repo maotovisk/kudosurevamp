@@ -53,7 +53,7 @@
             for (item of jsonItems) {
                 $(".products-list").append(`
 
-                    <div class='product'>
+                    <div id='${item._id}' class='product'>
 
                         <div class='product-description col'>
                             
@@ -77,8 +77,8 @@
 
                                 ${((jsonUser.items
                                 .find((a) => a.title == item.title) == undefined) ? (
-                                `<button class='btn btn-danger button-buy' id='button-buy' onclick='buyItem( ${item._id} )' data-origin=' ${item._id}'>Unlock</button>`
-                                ) :
+                                ((jsonUser.kudosu.availble > item.price) ? `<button class='btn btn-danger button-buy' id='button-buy' onclick='buyItem( \"${item._id}\")' data-origin='${item._id}'>Unlock</button>`
+                                : "<btn class='btn btn-primary disabled'>Not enough kudosu</btn>")) :
                                 `<btn class='btn btn-primary disabled'>Already Unlocked</btn>`)}
                                 
                         </div> 
