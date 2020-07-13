@@ -12,9 +12,16 @@
         <% }%>
       </ul>
       <% if (nav.login == true) { %>
-            
-    <a class="nav-link"><img src="<%= user.avatarUrl%>" width="32" height="32" alt="avatar" class="rounded-circle">
-    &nbsp; Welcome, <%= user.username%></a>
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <li class="nav-item dropdown">
+            <a href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  class="nav-link dropdown-toggle"><img src="<%= user.avatarUrl%>" width="32" height="32" alt="avatar" class="rounded-circle">&nbsp; Welcome, <%= user.username%></a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/logout">Logout</a>
+            </div>
+          </li>
+      </ul>
     <% } else { %>    
             <a href="/login" class="nav-link">Login </a>
     <% } %>
