@@ -9,6 +9,7 @@ import expressLayouts from 'express-ejs-layouts';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import { hostname } from 'os';
+import User from './model/user.js';
 
 const config = JSON.parse(fs.readFileSync('./config.json','utf-8'));
 
@@ -104,12 +105,19 @@ async function startService() {
                     res.render("pages/indexNotLoggedIn.ejs");
                 }
         })
-        webServer.app.get('/store', (req, res) => {
+        webServer.app.get('/store', async (req, res) => {
             if (req.cookies.credentials && req.session.login) {
-                    res.render("pages/store.ejs", {user: req.cookies.credentials, server: {hostname: process.env.HOSTNAME, port: port}});
-                } else {
-                    res.render("pages/indexNotLoggedIn.ejs");
-                }
+                let userCredentials = req.cookies.credentials;
+                const userDB = await User.findOne({"osu_id": userCredentials.userId});
+                if (userDB == null)
+                    return res.render("pages/store.ejs", {user: req.cookies.credentials, server: {hostname: process.env.HOSTNAME, port: port}}); 
+
+                userCredentials.currency = userDB.currency;
+                res.cookie("credentials", userCredentials);
+                res.render("pages/store.ejs", {user: userCredentials, server: {hostname: process.env.HOSTNAME, port: port}});
+            } else {
+                res.render("pages/indexNotLoggedIn.ejs");
+            }
         });
 
         webServer.app.get('/admin', (req, res) => {
@@ -122,6 +130,17 @@ async function startService() {
 
         webServer.app.get('/login', (req, res) => {
                 res.redirect(301, '/authenticate');
+        });
+
+        webServer.app.get('/logout', (req, res) => {
+        if (req.cookies.credentials && req.session.login) {
+            req.session.destroy();
+            req.cookies.credentials = null;
+            res.redirect('/index');
+        } else {
+            res.render("pages/indexNotLoggedIn.ejs");
+        }
+
         });
     }
 }

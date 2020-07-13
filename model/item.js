@@ -4,7 +4,7 @@ const itemSchema = new mongoose.Schema({
     title: String,
     image_url: String,
     price: Number,
-    is_consummable: Boolean,
+    is_consumable: Boolean,
     user_role: Number
 });
 

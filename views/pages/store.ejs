@@ -15,7 +15,7 @@
         </div>
 
         <div class="d-flex justify-content-center  mt-0 bg-light-dark px-1 py-2">
-            <span>You have <%= user.kudosu.available %> kudosu available.</span>
+            <span>You have <%= user.kudosu.total + user.currency.bonus%> total kudosu and <%= user.kudosu.available + user.currency.bonus - user.currency.spent %> kudosu available.</span>
         </div>
 
         <div class="bg-dark bb-round px-1 py-2">
@@ -75,11 +75,15 @@
 
                         <div class='product-buy'>
 
-                                ${((jsonUser.items
+                                ${ (!item.is_consumable ? ((jsonUser.items
                                 .find((a) => a.title == item.title) == undefined) ? (
-                                ((jsonUser.kudosu.availble > item.price) ? `<button class='btn btn-danger button-buy' id='button-buy' onclick='buyItem( \"${item._id}\")' data-origin='${item._id}'>Unlock</button>`
+                                ((jsonUser.kudosu.total + jsonUser.currency.bonus >= item.price) ? `<button class='btn btn-danger button-buy' id='button-buy' onclick='buyItem( \"${item._id}\")' data-origin='${item._id}'>Unlock</button>`
                                 : "<btn class='btn btn-primary disabled'>Not enough kudosu</btn>")) :
-                                `<btn class='btn btn-primary disabled'>Already Unlocked</btn>`)}
+                                `<btn class='btn btn-primary disabled'>Already Unlocked</btn>`):((jsonUser.items
+                                .find((a) => a.title == item.title) == undefined) ? (
+                                ((jsonUser.kudosu.total - jsonUser.currency.spent + jsonUser.currency.bonus >= item.price) ? `<button class='btn btn-danger button-buy' id='button-buy' onclick='buyItem( \"${item._id}\")' data-origin='${item._id}'>Buy</button>`
+                                : "<btn class='btn btn-primary disabled'>Not enough kudosu</btn>")) :
+                                `<btn class='btn btn-primary disabled'>Already Bought</btn>`))}
                                 
                         </div> 
 

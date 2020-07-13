@@ -33,7 +33,8 @@ async function startRouters() {
                         "username": user.name,
                         "id": user.osu_id,
                         "items": itemList,
-                        "kudosu": user.kudosu
+                        "kudosu": user.kudosu,
+                        "currency": user.currency
                     }
                     res.json(userResponse);  
                 });
@@ -42,7 +43,7 @@ async function startRouters() {
     });
 
     // CREATE USER ENDPOINT
-    apiRouter.route('/user').post((req, res) => {
+    /*apiRouter.route('/user').post((req, res) => {
         req.accepts('application/json');
         if (req.session.login && req.session.admin) {
             let userJson = req.json;
@@ -63,7 +64,7 @@ async function startRouters() {
         } else {
             res.json({"error": "not authenticated"})
         }
-    });
+    });*/
 
     //CREATE ITEM ENDPOINT 
     apiRouter.route('/item').post( (req, res) => {
@@ -99,13 +100,16 @@ async function startRouters() {
                     if (error) 
                         return res.json({"error": "item not found"});
                     let hasItem = !(user.items.find((i)=> {item.item_id = i}) == undefined);
-                    console.log(hasItem)
-                    let canBuy = ((user.kudosu.available >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false;
-                    let canUnlock = ((user.kudosu.total >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false;
-                    if (canUnlock || canBuy) {
-                        let isConsummable = item.is_consumable;
-                        let remainingKudosu = (user.kudosu.available - item.price);
-                        let response = await User.updateOne({"_id": user.id}, { "kudosu": {"available": (isConsummable ? (remainingKudosu) : user.kudosu.available), "total": user.kudosu.total},  $push: {"items": {"item_id": item._id}}});
+                    let canBuy = (((user.kudosu.total + user.currency.bonus - user.currency.spent) >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false;
+                    let isConsummable = item.is_consumable == undefined ? false: item.is_consumable;
+
+                    let canUnlock = ((user.kudosu.total + user.currency.bonus >= item.price) && !hasItem/* && user.access.role_id >= item.role*/) ? true : false;
+                    if (canUnlock && isConsummable == false) {
+                        let response = await User.updateOne({"_id": user.id}, { $push: {"items": {"item_id": item._id}}});
+                        res.json(response.nModified);
+                    } else if (canBuy && isConsummable == true) {
+                        let spentCurrency = isConsummable ? user.currency.spent + item.price : user.currency.spent;
+                        let response = await User.updateOne({"_id": user.id}, { "currency": {"spent": spentCurrency, "bonus": user.currency.bonus },  $push: {"items": {"item_id": item._id}}});
                         res.json(response.nModified);
                     } else {
                         res.json({"error": "coudn't complete the action"})

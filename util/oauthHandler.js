@@ -41,28 +41,42 @@ export default async function(expressServer) {
                         if (json_users.includes('{"avatar_url":')) {
                             await User.findOne({"osu_id": parsed.id}, async (err, userDB)=> {
                                 if (userDB == undefined)
-                                    User.create({
+                                    userDB = await User.create({
                                         name: parsed.username,
                                         osu_id: parsed.id,
                                         token: user.accessToken,
+                                        session_id: req.session.id,
                                         kudosu:parsed.kudosu,
+                                        qah_checks: 0, //for now
                                         items: [],
+                                        currency: {
+                                            spent: 0,
+                                            bonus: 0
+                                        },
                                         access: {
                                             role_id: 0,
                                             admin: (parsed.id == 3914271 || parsed.is_nat || parsed.is_admin)
                                         }
                                     });
-                                else 
-                                    await User.updateOne({"osu_id": parsed.id}, {"name": parsed.username, "token": user.accessToken} );
+                                else {
+                                    userDB.osu_id = parsed.id
+                                    userDB.name = parsed.username, 
+                                    userDB.session_id = req.session.id,
+                                    userDB.kudosu = parsed.kudosu,
+                                    userDB.qah_checks = 1, //for now
+                                    userDB.token = user.accessToken
+                                    userDB.save();
+                                }
                                 let userCredentials = {
                                     isAuthenticated: true,
                                     accessToken: user.accessToken,
                                     username: parsed.username,
                                     userId: parsed.id,
-                                    kudosu: parsed.kudosu,
+                                    kudosu: userDB.kudosu,
+                                    currency: userDB.currency,
                                     avatarUrl: parsed.avatar_url,
                                     refreshToken: user.refreshToken,
-                                    isAdmin: (userDB != null || userDB != undefined) ? userDB.access.admin : (parsed.id == 3914271 || parsed.is_nat || parsed.is_admin)
+                                    isAdmin: userDB.access.admin
                                 };
                                 res.cookie('credentials', userCredentials, {"maxAge": 28800000});
                                 req.session.cookie.maxAge = 28800000;
