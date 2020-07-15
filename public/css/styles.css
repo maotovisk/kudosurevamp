@@ -151,7 +151,6 @@ input[type=text], select {
   
 .dropdown {
     float: left;
-    overflow: hidden;
   }
   
   .dropdown .dropbtn {
