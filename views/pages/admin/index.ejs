@@ -139,7 +139,8 @@
         let errors = false;
 
         if(price.value < 500 || Number.isInteger(parseInt(price.value)) == false){
-            console.log(price.value)
+            
+            errors = true;
             $(".error-class").append(` 
             
             <p id="lowvalue" style="color: red">Your price is too low or invalid, people should spend more points for them to be worth a reward</p>
