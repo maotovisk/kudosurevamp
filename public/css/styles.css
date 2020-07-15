@@ -152,4 +152,44 @@ input[type=text], select {
     box-sizing: border-box;
   }
 
+  .admin-item-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.admin-item {
+    display: flex;
+    flex-direction: column;
+    background: #202020;
+    padding: 10px 15px;
+    margin: 10px 15px;
+    max-width: 210px;
+    height: 270px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-item-title {
+    text-align: center;
+    padding-bottom: 15px;
+}
+.admin-item-description {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding-bottom: 15px;
+}
+.admin-item-image {
+    width: auto;
+    height: auto;
+    max-width: 86px;
+    padding-bottom: 15px;
+}
+.admin-item-control {
+    margin-top: 15px;
+    text-align: center;
+}
   

@@ -11,13 +11,13 @@
         <span>Admin Panel</span>
     </div>
     <div class="bg-dark px-1 py-2">
-
+        <div class="alert alert-hidden mt-1" id="alert-top" role="alert"></div>
         <div class="grid-admin">
 
             <div class="admin-sidebar">
 
                 <ul class="admin-nav">
-                    <li class="admin-nav-item admin-nav-item-active">Test</li>
+                    <li class="admin-nav-item admin-nav-item-active">Item</li>
                     <li class="admin-nav-item">Test</li>
                     <li class="admin-nav-item">Test</li>
                     <li class="admin-nav-item">Test</li>
@@ -29,8 +29,8 @@
                 <div class="admin-controller">
                 </div>
 
-                <div class="py-1 px-2 admin-page">
-                    <h5>Admin </h5>
+                <div class="py-1 px-2 admin-page admin-item-list">
+
                 </div>
 
             </div>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="bb-round container px-4 bg-fake-rocketseat">
-        <div class="alert alert-hidden" id="alert" role="alert">
+        <div class="alert alert-hidden mt-1" id="alert" role="alert">
         </div>
         <form action="" id="createItemForm" class="container">
 
@@ -59,7 +59,7 @@
                 <div class="col-6">
                     <label for="image_url">Image URL</label>
                     <input type="text" id="image_url" name="image_url" placeholder="https://seto.kousuke/nat.jpg">
-                </div>  
+                </div>
 
             </div>
             <div class="row">
@@ -94,7 +94,7 @@
             </div>
 
             <div class="error-class row justify-content-center bb-round px-4 pb-4 d-flex flex-column text-center">
-                
+
                 <!--- javascript append -->
 
             </div>
@@ -106,6 +106,118 @@
 </div>
 
 <script>
+    let items = null;
+    $(document).ready(async () => {
+        let itemsResponse = await fetch("/api/item", {
+            method: 'GET'
+        });
+        items = itemsResponse.text();
+        items.then(value => {
+            console.log(value)
+            items = JSON.parse(value);
+            renderList("item", ".admin-page", JSON.parse(value));
+        })
+    })
+
+    async function deleteItem(item_id) {
+        let item = items.find((a) => a._id == item_id);
+        let toDeleteId = item_id;
+        let clickedButton = $("button[data-origin='" + item_id + "']");
+
+        bootbox.confirm({
+            message: "Do you want to delete '" + item.title + "'?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: (result) => {
+                if (result == false)
+                    return;
+                let headers = new Headers();
+                headers.append("Content-Type", 'application/json');
+                let hostname = window.location.protocol;
+                let loading = `<span class="material-icons">refresh</span>`;
+                let jsonRequest = {
+                    "item_id": item_id
+                }
+
+                clickedButton.html(loading);
+                fetch(`${hostname}/api/item/delete`, {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify(jsonRequest)
+                    })
+                    .then(function (res) {
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        console.log(data);
+                        if (data.error) {
+                            clickedButton.text("Delete");
+                            bootbox.alert({
+                                size: "small",
+                                title: "Error!",
+                                message: "Something occourred while deleting the item!"
+                            });
+                        } else {
+                            bootbox.alert({
+                                size: "small",
+                                title: "Success!",
+                                message: "You've successfully deleted the item '" + item.title +"'!"
+                            });
+                            
+                            $("#" + toDeleteId).remove();
+
+                        }
+                    }).catch((e) => {
+                        console.log(e)
+                        bootbox.alert({
+                                size: "small",
+                                title: "Error!",
+                                message: "Something occourred while deleting the item!"
+                            });
+                    });
+            }
+        });
+    }
+    // render funciton
+    function renderList(type, element, json) {
+        if (type == "item") {
+            for (item of json) {
+                $(element).append(`
+
+                    <div id='${item._id}' class='admin-item'>
+                        <div class='admin-item-description'>      
+                            <div class='admin-item-title'> 
+                                ${item.title}
+                            </div>
+
+                            <div>
+                                <img class='admin-item-image' src=' ${item.image_url}'/>
+                            </div> 
+
+                            <div>
+                                Unlock at ${item.price} kudosu
+                            </div> 
+                        
+                        </div> 
+
+                        <div class='admin-item-control'>
+
+                            <button class='btn btn-danger button-buy' id='button-buy' onclick='deleteItem( \"${item._id}\")' data-origin='${item._id}'>Delete</button>
+                                   
+                        </div> 
+
+                    </div>`);
+            }
+        }
+    }
 
     $("#createItemForm").submit(e => {
 
@@ -122,24 +234,24 @@
          * Validation process of form Create Item starts here
          */
 
-        item_name_filtered = item_name.value.replace(/ /g,'');
-        image_url_filtered = image_url.value.replace(/ /g,'');
+        item_name_filtered = item_name.value.replace(/ /g, '');
+        image_url_filtered = image_url.value.replace(/ /g, '');
 
         //removes all previously triggered errors
 
-        if(document.getElementById("lowvalue")) document.getElementById("lowvalue").remove();
-        if(document.getElementById("invalidname")) document.getElementById("invalidname").remove();
-        if(document.getElementById("addcoin")) document.getElementById("addcoin").remove();
-        if(document.getElementById("addconsumable")) document.getElementById("addconsumable").remove();
-        if(document.getElementById("role")) document.getElementById("role").remove();
-        if(document.getElementById("urlerror")) document.getElementById("urlerror").remove();
+        if (document.getElementById("lowvalue")) document.getElementById("lowvalue").remove();
+        if (document.getElementById("invalidname")) document.getElementById("invalidname").remove();
+        if (document.getElementById("addcoin")) document.getElementById("addcoin").remove();
+        if (document.getElementById("addconsumable")) document.getElementById("addconsumable").remove();
+        if (document.getElementById("role")) document.getElementById("role").remove();
+        if (document.getElementById("urlerror")) document.getElementById("urlerror").remove();
 
         //price validation
 
         let errors = false;
 
-        if(price.value < 500 || Number.isInteger(parseInt(price.value)) == false){
-            
+        if (price.value < 500 || Number.isInteger(parseInt(price.value)) == false) {
+
             errors = true;
             $(".error-class").append(` 
             
@@ -151,8 +263,8 @@
 
         //name validation
 
-        if(item_name_filtered == null || item_name_filtered == "") {
-            
+        if (item_name_filtered == null || item_name_filtered == "") {
+
             errors = true;
             $(".error-class").append(` 
             
@@ -164,9 +276,9 @@
 
         //coin validation
 
-        if(coinOption == "select") {
+        if (coinOption == "select") {
 
-            errors = true;            
+            errors = true;
             $(".error-class").append(` 
             
             <p id="addcoin" style="color: red">You must select a coin option</p>
@@ -177,7 +289,7 @@
 
         //image validation
 
-        if(image_url_filtered == null || image_url_filtered == ""){
+        if (image_url_filtered == null || image_url_filtered == "") {
 
             errors = true;
             $(".error-class").append(` 
@@ -190,8 +302,8 @@
 
         //consumable validation
 
-        if(consumableOption == "select") {
-            
+        if (consumableOption == "select") {
+
             errors = true;
             $(".error-class").append(` 
             
@@ -203,9 +315,9 @@
 
         //role validation
 
-        if( user_role.value == "" || Number.isInteger(parseInt(user_role.value)) == false) { 
+        if (user_role.value == "" || Number.isInteger(parseInt(user_role.value)) == false) {
             console.log(user_role.value)
-            
+
             errors = true;
             $(".error-class").append(` 
             
@@ -217,7 +329,7 @@
         if (!errors) {
             let form = document.getElementById('createItemForm')
             let formData = new FormData(form);
-            let jsonData  = Object.fromEntries(formData);
+            let jsonData = Object.fromEntries(formData);
             let hostname = window.location.protocol;
             let headers = new Headers();
             headers.append("Content-Type", 'application/json');
@@ -229,36 +341,42 @@
                 is_consumable: (jsonData.is_consumable == 'on') ? true : false,
                 user_role: jsonData.user_role //should default to zero
             }
-                       
+
 
             fetch(`${hostname}/api/item`, {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify(jsonRequest)
-            })
-            .then(function (res) {
-                return res.json();
-            })
-            .then(function (data) {
-                console.log(data);
-                if (data.error) {
-                    $("#alert").text("Something went wrong!");
-                    $("#alert").addClass("alert-danger");
-                    $("#alert").removeClass("alert-hidden");
-                } else {
-                    $("#alert").text("You have succefully added the item " + jsonRequest.title +".");
-                    $("#alert").addClass("alert-success");
-                    $("#alert").removeClass("alert-hidden");
-                }
-            }).catch((e) => {
-                console.log(e)
-                $("#alert").text("Something went wrong!");
-                $("#alert").addClass("alert-danger");
-                $("#alert").removeClass("alert-hidden");
-            });
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify(jsonRequest)
+                })
+                .then(function (res) {
+                    return res.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                    if (data.error) {
+                        bootbox.alert({
+                                size: "small",
+                                title: "Error!",
+                                message: "Something occourred while adding the item!"
+                            });
+
+                    } else {
+                        bootbox.alert({
+                                size: "small",
+                                title: "Success!",
+                                message: "You've successfully added the item '" + jsonRequest.title +"'!"
+                            });
+                    }
+                }).catch((e) => {
+                    console.log(e)
+                    bootbox.alert({
+                                size: "small",
+                                title: "Error!",
+                                message: "Something occourred while adding the item!"
+                            });
+                });
 
         }
-        
-    })
 
+    })
 </script>
