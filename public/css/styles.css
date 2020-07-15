@@ -120,6 +120,8 @@ main {
 
 .admin-page {
     flex-grow: 1;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
 .admin-nav {
@@ -128,21 +130,25 @@ main {
     list-style: none;
     list-style-position: unset;
 }
-.admin-nav-item {
-    margin: 3px 15px;
+.admin-nav-link {
     padding: 6px 12px;
     border-radius: 400px;
 }
 
-.admin-nav-item:hover {
+.admin-nav-item {
+    margin: 3px 15px;
+    padding: 6px 12px;
+}
+
+.admin-nav-link:hover {
     background-color: #202020;
 }
 
-.admin-nav-item-active {
+.admin-nav-link-active {
     background-color: #454545;
 }
 
-input[type=text], select {
+/*input[type=text], select {
     width: 100%;
     padding: 8px 15px;
     margin: 8px 0;
@@ -150,7 +156,7 @@ input[type=text], select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-  }
+  }*/
 
   .admin-item-list {
     display: flex;
@@ -192,4 +198,19 @@ input[type=text], select {
     margin-top: 15px;
     text-align: center;
 }
-  
+
+.admin-input {
+    border: none;
+    background: transparent;
+    color: #a1a1a1;
+    width: 100%;
+    padding: 6px 12px;
+    border-bottom: #818181 2px solid;
+    box-shadow: black 2px;
+}
+
+.admin-input:focus {
+    border-bottom: #a1a1a1 2px solid;
+    color: #a1a1a1;
+    outline: none;
+}

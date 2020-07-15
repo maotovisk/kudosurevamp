@@ -55,7 +55,7 @@ export default async function(expressServer) {
                                         },
                                         access: {
                                             role_id: 0,
-                                            admin: (parsed.id == 3914271 || parsed.is_nat || parsed.is_admin)
+                                            admin: (parsed.id == 3914271 || parsed.id == 2857314 || parsed.id == 2652951 || parsed.id == 9155377|| parsed.is_admin)
                                         }
                                     });
                                 else {
