@@ -1,7 +1,63 @@
-$("#createItemForm").submit(e => {
+async function createItem() {
+    
+    let dialog = bootbox.dialog({
+        title: 'Create ',
+        message: `
+        <form action="" id="createItemForm" class="container">
+            <h3>Create Item</h3>
+            <div class="row">
+                <div class="col-4">
+                    <label for="item_name">Item Name</label>
+                    <input class="admin-input" type="text" id="item_name" name="item_name" placeholder="Item Name">
+                </div>
+                <div class="col-2">
+                    <label for="price">Price</label>
+                    <input class="admin-input" type="text"  id="price" name="price" placeholder="500">
+                </div>
+                <div class="col-6">
+                    <label for="image_url">Image URL</label>
+                    <input type="text" class="admin-input" id="image_url" name="image_url" placeholder="https://seto.kousuke/nat.jpg">
+                </div>
+            </div>
+            <div class="row mt-3">
+
+                <div class="col-3">
+                    <label for="user_role">User Role (Number)</label>
+                    <input class="admin-input" type="text" id="user_role" name="user_role" placeholder="2">
+                </div>
+
+                <div class="col-4">
+                    <label for="coin_type">Coin Type</label>
+                    <select class="admin-input" id="coin_type" name="coin_type">
+                        <option value="select">Select Option</option>
+                        <option selected value="kudosu">Kudosu</option>
+                        <option value="qactivity">QActivity</option>
+                    </select>
+                </div>
+
+                <div class="col-5 d-flex align-text-bottom d-flex align-items-center justify-content-center">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="consumable" name="consumable">
+                        <label class="custom-control-label" for="consumable">Is it consumable?</label>
+                    </div>
+                </div>
+
+            </div>
+            <input class="btn btn-primary ml-auto mt-4 px-4" type="submit" value="Create Item">
+            <a id="btn-closemodal" class="btn btn-danger ml-auto mt-4 px-4">Cancel</a>
+        </form>`,
+size: 'large'
+    })
+    dialog.init();
+
+    $("#btn-closemodal").click(()=> {
+        dialog.modal('hide');
+    })
+
+$("#createItemForm").submit((event) => {
 
     //this function won't let the browser refresh or open a new tab
-    e.preventDefault();
+    event.preventDefault();
 
     let coinvar = document.getElementById("coin_type");
     let coinOption = coinvar.options[coinvar.selectedIndex].value;
@@ -133,28 +189,24 @@ $("#createItemForm").submit(e => {
             .then(function (data) {
                 console.log(data);
                 if (data.error) {
-                    bootbox.alert({
-                            size: "small",
-                            title: "Error!",
-                            message: "Something occourred while adding the item!"
-                        });
+                    dialog.find('.bootbox-body').append(`<div class="alert alert-danger">Error!</div>`);
 
                 } else {
+                    dialog.modal('hide');
                     bootbox.alert({
-                            size: "small",
                             title: "Success!",
-                            message: "You've successfully added the item '" + jsonRequest.title +"'!"
+                            message: "You've successfully updated the item '" + jsonRequest.title +"'!"
                         });
                 }
             }).catch((e) => {
                 console.log(e)
-                bootbox.alert({
-                            size: "small",
-                            title: "Error!",
-                            message: "Something occourred while adding the item!"
-                        });
+                dialog.find('.bootbox-body').append(`<div class="alert alert-danger">Error!</div>`);
+
             });
 
     }
 
 })
+
+
+}

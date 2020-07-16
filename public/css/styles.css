@@ -146,7 +146,7 @@ main {
 
 .admin-page {
     flex-grow: 1;
-    max-height: 500px;
+    max-height: 750px;
     overflow-y: auto;
 }
 
@@ -157,6 +157,8 @@ main {
     list-style-position: unset;
 }
 .admin-nav-link {
+    display: inline-flex;
+    vertical-align: middle;
     padding: 6px 12px;
     border-radius: 400px;
 }

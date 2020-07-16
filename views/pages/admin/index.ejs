@@ -10,95 +10,35 @@
     <div class="d-flex justify-content-center  mt-2 bg-light-dark px-1 py-2 bt-round">
         <span>Admin Panel</span>
     </div>
-    <div class="bg-dark px-1 py-2">
+    <div class="bg-dark px-1 py-2 bb-round">
         <div class="alert alert-hidden mt-1" id="alert-top" role="alert"></div>
         <div class="grid-admin">
 
             <div class="admin-sidebar">
                 <ul class="admin-nav">
-                    <li class="admin-nav-item "><a id="admin-nav-items" class="admin-nav-link">Items</a></li>
+                    <li class="admin-nav-item ">
+                        <a id="admin-nav-items" class="admin-nav-link">Items</a>
+                    </li>
                     <li class="admin-nav-item "><a id="admin-nav-users" class="admin-nav-link">Users</a></li>
-                    <li class="admin-nav-item "><button class='btn btn-success button-buy mt-5' id='button-buy' onclick='createItem()' data-origin='${item._id}'>Create Item</button></li>
                 </ul>
                 
                 
 
             </div>
+
             <div class="admin-content">
 
                 <div class="admin-controller">
 
                 </div>
+
                 <div class="py-1 px-2 admin-page admin-item-list">
 
                 </div>
 
             </div>
+
         </div>
-    </div>
-
-    <div class="bb-round container px-4 bg-fake-rocketseat">
-        <div class="alert alert-hidden mt-1" id="alert" role="alert">
-        </div>
-        <form action="" id="createItemForm" class="container">
-
-            <h3 class="pt-4">Create Item</h3>
-
-            <div class="row">
-
-                <div class="col-4">
-                    <label for="item_name">Item Name</label>
-                    <input class="admin-input" type="text" id="item_name" name="item_name" placeholder="Item Name">
-                </div>
-
-                <div class="col-2">
-                    <label for="price">Price</label>
-                    <input class="admin-input" type="text" id="price" name="price" placeholder="500">
-                </div>
-
-                <div class="col-6">
-                    <label for="image_url">Image URL</label>
-                    <input class="admin-input" type="text" id="image_url" name="image_url" placeholder="https://seto.kousuke/nat.jpg">
-                </div>
-
-            </div>
-            <div class="row mt-2">
-                <div class="col-2">
-                    <label for="user_role">User Role (Number)</label>
-                    <input class="admin-input" type="text" id="user_role" name="user_role" placeholder="2">
-                </div>
-
-                <div class="col-4">
-                    <label for="coin_type">Coin Type</label>
-                    <select class="admin-input" id="coin_type" name="coin_type">
-                        <option value="select">Select Option</option>
-                        <option value="kudosu">Kudosu</option>
-                        <option value="qactivity">QActivity</option>
-                    </select>
-                </div>
-
-                <div class="col-6 d-flex align-text-bottom d-flex align-items-center justify-content-center">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="consumable" name="consumable">
-                        <label class="custom-control-label" for="consumable">Is it consumable?</label>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row justify-content-center bb-round px-4 pb-4 d-flex">
-
-                <input class="btn btn-primary mt-4 px-4" type="submit" value="Create Item">
-
-            </div>
-
-            <div class="error-class row justify-content-center bb-round px-4 pb-4 d-flex flex-column text-center">
-
-                <!--- javascript append -->
-
-            </div>
-
-        </form>
 
     </div>
 
@@ -122,7 +62,14 @@
         items.then(value => {
             console.log(value)
             items = JSON.parse(value); 
-            $(".admin-controller").html(`<div class="mx-3 my-1"> <input id="item-search" class="admin-input" type="text" placeholder="Search" aria-label="Search"></div>`);  
+            $(".admin-controller").html(`<div class="mx-3 my-1 d-flex mt-3"> 
+                                         <div class="flex-grow-1"> 
+                                            <input id="item-search" class="admin-input" type="text" placeholder="Search" aria-label="Search"> 
+                                         </div>
+                                         <div>
+                                         <a class='btn btn-success button-buy ml-4' id='button-buy' onclick='createItem()'>Create Item</a>
+                                         </div>
+                                         </div>`);
             $("#item-search").keyup(function() {
                 renderList("item", ".admin-page", items.filter((x) => x.title.toLowerCase().includes($(this).val())));
             })
@@ -130,7 +77,6 @@
         })
     }
 
-    //UNUSED YET
     const getUserList = async () => {
         $(".admin-nav-link").removeClass("admin-nav-link-active")
         $("#admin-nav-users").addClass("admin-nav-link-active");
