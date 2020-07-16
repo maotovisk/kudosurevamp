@@ -15,10 +15,11 @@ let items = null;
                                          <div class="flex-grow-1"> 
                                             <input id="item-search" class="admin-input" type="text" placeholder="Search" aria-label="Search"> 
                                          </div>
-                                         <div>
+                                         <div>  
                                          <a class='btn btn-success button-buy ml-4 d-flex align-items-center' id='button-buy' onclick='createItem()'><span class="material-icons">
-note_add
-</span> <span class="ml-2">Create Item </span></a>
+                                         note_add
+                                         </span> <span class="ml-2">Create Item </span>
+                                         </a>
                                          </div>
                                          </div>`);
             $("#item-search").keyup(function() {
@@ -40,7 +41,9 @@ note_add
         users.then(value => {
             console.log(value)
             users = JSON.parse(value); 
-            $(".admin-controller").html(`<div class="mx-3 my-1"> <input id="user-search" class="admin-input" type="text" placeholder="Search" aria-label="Search"></div>`);  
+            $(".admin-controller").html(`<div class="mx-3 my-1 mt-3"> 
+                                         <input id="user-search" class="admin-input" type="text" placeholder="Search" aria-label="Search">
+                                         </div>`);  
             $("#user-search").keyup(function() {
                 renderList("user", ".admin-page", users.filter((x) => x.username.toLowerCase().includes($(this).val().toLowerCase())));
             })
@@ -54,8 +57,9 @@ note_add
 
     // render funciton
     function renderList(type, element, json) {
-        if (json == undefined)
-            json = [];
+
+        if (json == undefined) json = [];
+
         if (type == "item")  {
             $(element).html("");
 
@@ -92,7 +96,8 @@ note_add
 
                     </div>`);
             }
-        } 
+        }
+
         if (type == "user") {
             $(element).html("");
 

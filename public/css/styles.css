@@ -77,9 +77,12 @@ main {
 
 .products-container {
 
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 230px);
+    gap: auto;
+    justify-content: space-around;
+    align-items: center;
     flex-wrap: wrap;
-    justify-content: center;
     margin-bottom: 20px;
 
 }
@@ -99,7 +102,7 @@ main {
     background: #202020;
     padding: 10px 15px;
     margin: 10px 15px;
-    width: 210px;
+    width: 230px;
     height: 270px;
     border-radius: 10px;
     align-items: center;
@@ -200,7 +203,7 @@ main {
     background: #202020;
     padding: 10px 15px;
     margin: 10px 15px;
-    max-width: 210px;
+    width: 215px;
     height: 270px;
     border-radius: 10px;
     align-items: center;
