@@ -1,10 +1,9 @@
 async function createItem() {
     
     let dialog = bootbox.dialog({
-        title: 'Create ',
+        title: 'Create Item',
         message: `
         <form action="" id="createItemForm" class="container">
-            <h3>Create Item</h3>
             <div class="row">
                 <div class="col-4">
                     <label for="item_name">Item Name</label>

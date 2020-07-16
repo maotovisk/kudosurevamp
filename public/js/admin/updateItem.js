@@ -1,10 +1,9 @@
 async function editItem(item_id) {
     let item = items.find((a) => a._id == item_id);
     let dialog = bootbox.dialog({
-        title: 'Edit ',
+        title: 'Edit Item',
         message: `
         <form action="" id="editItemForm" class="container">
-            <h3>Update Item</h3>
             <div class="row">
                 <div class="col-4">
                     <label for="item_name">Item Name</label>

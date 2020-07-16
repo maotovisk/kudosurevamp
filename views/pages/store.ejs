@@ -56,24 +56,9 @@
             
             for (item of jsonItems) {
                 
-                itemsCount++
-
-                if(itemsCount >= 4 || firstRun){
-                    
-                    itemsCount = 0, firstRun = false;
-                    rowNumber++
+               
 
                     $(`.products-container`).append(`
-
-                        <div class="items-row-general items-row-${rowNumber}">
-
-                        </div>
-
-                    `);
-
-                }
-
-                $(`.items-row-${rowNumber}`).append(`
 
                     <div id='${item._id}' class='product'>
 

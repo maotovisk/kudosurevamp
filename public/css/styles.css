@@ -158,8 +158,9 @@ main {
 }
 .admin-nav-link {
     display: inline-flex;
-    vertical-align: middle;
+    align-items: center;
     padding: 6px 12px;
+    font-size: 16px;
     border-radius: 400px;
 }
 
@@ -190,7 +191,7 @@ main {
   .admin-item-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .admin-item {
@@ -249,7 +250,7 @@ main {
 .admin-users-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .admin-user {
