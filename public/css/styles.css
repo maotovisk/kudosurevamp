@@ -8,6 +8,20 @@ main {
     height: 100vh;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #3333; 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius:400px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+
 .page-content {
     flex-grow: 1;
 }
@@ -142,6 +156,7 @@ main {
 
 .admin-nav-link:hover {
     background-color: #202020;
+    cursor: pointer;
 }
 
 .admin-nav-link-active {
@@ -213,4 +228,44 @@ main {
     border-bottom: #a1a1a1 2px solid;
     color: #a1a1a1;
     outline: none;
+}
+
+
+
+.admin-users-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.admin-user {
+    display: flex;
+    flex-direction: column;
+    background: #202020;
+    padding: 10px 15px;
+    margin: 10px 15px;
+    max-width: 210px;
+    height: 270px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-user-title {
+    text-align: center;
+}
+.admin-user-description {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.admin-user-image {
+    width: auto;
+    height: auto;
+    max-height: 96px;
+    padding: 10px 5px;
+}
+.admin-user-control {
+    text-align: center;
 }

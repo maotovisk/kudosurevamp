@@ -42,6 +42,40 @@ async function startRouters() {
         });
     });
 
+    apiRouter.route('/user').get(async (req, res) => {
+        await User.find({}, async (err, users) => {
+            if (err || users == undefined)
+                res.json({ "error": "there are no users" });
+            else {
+                if (req.session.login && req.session.admin)
+                {
+                    let itemList = await Item.find();
+                    let jsonResult = []
+                    for (let user of users) {
+                        let userItemList = itemList.filter((e) => user.items.map(item => { return item.item_id}).includes(e.id));
+                        let itemJsonList = userItemList.map((item) => ({
+                            "item_id": item.id,
+                            "title": item.title,
+                            "image_url": item.image_url
+                        }));
+                       jsonResult.push({
+                            "_id": user._id,
+                            "username": user.name,
+                            "osu_id": user.osu_id,
+                            "items": itemJsonList,
+                            "kudosu": user.kudosu,
+                            "currency": user.currency
+                        });
+                    }
+                    res.json(jsonResult);
+                }
+                else
+                    res.json({"error": "not authorized"})
+            }
+        });
+    });
+
+
     // CREATE USER ENDPOINT
     /*apiRouter.route('/user').post((req, res) => {
         req.accepts('application/json');

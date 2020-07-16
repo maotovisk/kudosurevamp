@@ -16,8 +16,8 @@
 
             <div class="admin-sidebar">
                 <ul class="admin-nav">
-                    <li class="admin-nav-item "><a class="admin-nav-link admin-nav-link-active">Items</a></li>
-                    <li class="admin-nav-item "><a class="admin-nav-link">Users</a></li>
+                    <li class="admin-nav-item "><a id="admin-nav-items" class="admin-nav-link">Items</a></li>
+                    <li class="admin-nav-item "><a id="admin-nav-users" class="admin-nav-link">Users</a></li>
                 </ul>
 
             </div>
@@ -106,6 +106,8 @@
     let users = null;
 
     const getItemList = async () => {
+        $(".admin-nav-link").removeClass("admin-nav-link-active")
+        $("#admin-nav-items").addClass("admin-nav-link-active");
         let itemsResponse = await fetch("/api/item", {
             method: 'GET'
         });
@@ -113,7 +115,7 @@
         items.then(value => {
             console.log(value)
             items = JSON.parse(value); 
-            $(".admin-controller").append(` <div class="mx-3 my-1"> <input id="item-search" class="admin-input" type="text" placeholder="Search" aria-label="Search"></div>`);  
+            $(".admin-controller").html(`<div class="mx-3 my-1"> <input id="item-search" class="admin-input" type="text" placeholder="Search" aria-label="Search"></div>`);  
             $("#item-search").keyup(function() {
                 renderList("item", ".admin-page", items.filter((x) => x.title.toLowerCase().includes($(this).val())));
             })
@@ -123,6 +125,8 @@
 
     //UNUSED YET
     const getUserList = async () => {
+        $(".admin-nav-link").removeClass("admin-nav-link-active")
+        $("#admin-nav-users").addClass("admin-nav-link-active");
         let usersResponse = await fetch("/api/user", {
             method: 'GET'
         });
@@ -131,16 +135,18 @@
 
         users.then(value => {
             console.log(value)
-            items = JSON.parse(value); 
-            $(".admin-controller").append(` <div class="mx-3 my-1"> <input id="item-search" class="admin-input" type="text" placeholder="Search" aria-label="Search"></div>`);  
+            users = JSON.parse(value); 
+            $(".admin-controller").html(`<div class="mx-3 my-1"> <input id="user-search" class="admin-input" type="text" placeholder="Search" aria-label="Search"></div>`);  
             $("#user-search").keyup(function() {
-                renderList("user", ".admin-page", users.filter((x) => x.username.toLowerCase().includes($(this).val())));
+                renderList("user", ".admin-page", users.filter((x) => x.username.toLowerCase().includes($(this).val().toLowerCase())));
             })
             renderList("user", ".admin-page", JSON.parse(value));
         })
     }
     $(document).ready(getItemList);
 
+    $("#admin-nav-items").click(getItemList);
+    $("#admin-nav-users").click(getUserList);
 
     async function editItem(item_id) {
         let item = items.find((a) => a._id == item_id);
@@ -347,6 +353,38 @@
 
                     </div>`);
             }
+        } 
+        if (type == "user") {
+            $(element).html("");
+            for (user of json) {
+                $(element).append(`
+
+                    <div id='${user._id}' class='admin-user'>
+                        <div class='admin-user-description'>      
+                            <div class='admin-user-title'> 
+                                ${user.username}
+                            </div>
+
+                            <div>
+                                <img class='admin-user-image' src='https://a.ppy.sh/${user.osu_id}'/>
+                            </div> 
+
+                            <div>
+                                <p>${user.kudosu.total} total kudosu </p>
+                                <p> Items: ${user.items.length} </p>
+                            </div> 
+                        
+                        </div> 
+
+                        <div class='admin-user-control'>
+
+                            <button class='btn btn-secondary button-buy' id='button-buy' onclick='detailUser( \"${user._id}\")' data-origin='${user._id}'>Details</button>
+                                 
+                        </div> 
+
+                    </div>`);
+            }
+
         }
     }
 
