@@ -75,10 +75,22 @@ main {
 
 }
 
-.products-list {
+.products-container {
+
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: 20px;
+
+}
+
+.items-row-general{
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 960px;
+    margin-top: 20px;
+
 }
 
 .product {
@@ -87,7 +99,7 @@ main {
     background: #202020;
     padding: 10px 15px;
     margin: 10px 15px;
-    max-width: 210px;
+    width: 210px;
     height: 270px;
     border-radius: 10px;
     align-items: center;
@@ -244,7 +256,7 @@ main {
     background: #202020;
     padding: 10px 15px;
     margin: 10px 15px;
-    max-width: 210px;
+    width: 180px;
     height: 270px;
     border-radius: 10px;
     align-items: center;

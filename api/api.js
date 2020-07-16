@@ -225,6 +225,7 @@ async function startRouters() {
 async function startApiServices(webServer) {
     await startRouters();
     webServer.app.use('/api', apiRouter);
+    webServer.app.use("/static", express.static('./static/'));
 }
 
 export default startApiServices;

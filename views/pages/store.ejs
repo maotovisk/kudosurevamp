@@ -26,8 +26,8 @@
                     
                 </div>
 
-                <div class="products-list">
-
+                <div class="products-container">
+                    
                 </div>
 
             </div>
@@ -49,9 +49,31 @@
         }).then(async (user) => {
             let jsonItems = JSON.parse(json);
             let jsonUser = JSON.parse(user);
-            items = jsonItems;
+            let items = jsonItems;
+            let rowNumber = 0;
+            let firstRun = true;
+            let itemsCount = 0;
+            
             for (item of jsonItems) {
-                $(".products-list").append(`
+                
+                itemsCount++
+
+                if(itemsCount >= 4 || firstRun){
+                    
+                    itemsCount = 0, firstRun = false;
+                    rowNumber++
+
+                    $(`.products-container`).append(`
+
+                        <div class="items-row-general items-row-${rowNumber}">
+
+                        </div>
+
+                    `);
+
+                }
+
+                $(`.items-row-${rowNumber}`).append(`
 
                     <div id='${item._id}' class='product'>
 
