@@ -287,3 +287,17 @@ main {
 .admin-user-control {
     text-align: center;
 }
+
+.admin-detail-item-list {
+    padding-left: 16px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.admin-detail-item-list:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-detail-item-list:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}

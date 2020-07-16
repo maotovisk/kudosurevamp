@@ -6,7 +6,7 @@ async function detailUser(user_id) {
 
         htmlDetailItems += `
         
-            <p>Title: ${item.title}</p>
+            <div class="admin-detail-item-list">Title: ${item.title}</div>
 
         `
 
@@ -23,16 +23,22 @@ async function detailUser(user_id) {
                 <p>Kudosu Spent: ${user.currency.spent}</p>
                 <p>Bonus Kudosu: ${user.currency.bonus}</p>
 
-            </div>
+                <p>Items (${user.items.length}):</p>
+                <div class="details-items d-flex-column">
+                    
+                    ${htmlDetailItems}
 
-            <div class="details-items d-flex-column">
-                
-                ${htmlDetailItems}
-
+                </div>
             </div>
         
         
-        `
+        `,
+        buttons: {
+            cancel: {
+                label: 'Close',
+                className: 'btn-secondary'
+            }
+        }
     })
     dialog.init();
 

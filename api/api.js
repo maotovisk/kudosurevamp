@@ -77,28 +77,6 @@ async function startRouters() {
 
 
     // CREATE USER ENDPOINT
-    /*apiRouter.route('/user').post((req, res) => {
-        req.accepts('application/json');
-        if (req.session.login && req.session.admin) {
-            let userJson = req.json;
-            User.create({
-                name : userJson.userName,
-                osu_id: userJson.id,
-                token: req.session.token,
-                kudosu: {
-                    total: userJson.kudosuTotal,
-                    available: userJson.kudosuAvailable
-                },
-                items: [],
-                roles: {
-                    role_id: userJson.roles.role_id,
-                    admin: userJson.roles.admin
-                }
-            });
-        } else {
-            res.json({"error": "not authenticated"})
-        }
-    });*/
 
     //CREATE ITEM ENDPOINT 
     apiRouter.route('/item').post((req, res) => {
