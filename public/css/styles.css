@@ -101,7 +101,7 @@ main {
     flex-direction: column;
     background: #202020;
     padding: 10px 15px;
-    margin: 10px 15px;
+    margin: 15px 0px;
     width: 230px;
     height: 270px;
     border-radius: 10px;
@@ -117,7 +117,7 @@ main {
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-around;
     padding-bottom: 15px;
 }
 .product-image {
@@ -300,4 +300,16 @@ main {
 
 .admin-detail-item-list:hover {
     background-color: rgba(255, 255, 255, 0.15);
+}
+
+.user-info-container{
+
+
+    display: grid;
+    grid-template-rows: 20px 20px;
+    grid-template-columns: auto auto;
+    justify-content: space-around;
+    grid-template-areas: "tk ka"
+                         "ks bk";
+
 }

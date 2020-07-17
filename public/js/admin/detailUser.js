@@ -6,7 +6,7 @@ async function detailUser(user_id) {
 
         htmlDetailItems += `
         
-            <div class="admin-detail-item-list">Title: ${item.title}</div>
+            <div class="admin-detail-item-list">${item.title}</div>
 
         `
 
@@ -18,10 +18,12 @@ async function detailUser(user_id) {
 
             <div>
 
-                <p>Total Kudosu: ${user.kudosu.total}</p>
-                <p>Kudosu Available: ${user.kudosu.available}</p>
-                <p>Kudosu Spent: ${user.currency.spent}</p>
-                <p>Bonus Kudosu: ${user.currency.bonus}</p>
+                <div class="user-info-container mb-3">
+                <p style="grid-area: tk">Total Kudosu: ${user.kudosu.total}</p>
+                <p style="grid-area: ka">Kudosu Available: ${user.kudosu.available}</p>
+                <p style="grid-area: ks">Kudosu Spent: ${user.currency.spent}</p>
+                <p style="grid-area: bk">Bonus Kudosu: ${user.currency.bonus}</p>
+                </div>
 
                 <p>Items (${user.items.length}):</p>
                 <div class="details-items d-flex-column">
