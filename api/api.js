@@ -26,6 +26,7 @@ async function startRouters() {
                     if (error)
                         console.log(error);
                     let itemList = items.map((item) => ({
+                        "id": item._id,
                         "title": item.title,
                         "image_url": item.image_url
                     }));
@@ -42,6 +43,25 @@ async function startRouters() {
         });
     });
 
+    // REMOVE ITEM BY ID 
+    apiRouter.route('/user/:user_id').post(async (req, res) => {
+        await User.findById(req.params.user_id, async (err, user) => {
+            if (err || user == undefined)
+            res.json({ "error": "json not found" });
+            if (req.session.login && req.session.admin) {
+                let jsonRequest = req.body;
+                console.log(req.body)
+                if (jsonRequest.item_id == undefined)
+                    return res.json({ "error": "error parsing body" })
+                user.items = user.items.filter((item) => { return (item.item_id != jsonRequest.item_id)});
+                user.save();
+                res.json({"message": "OK"});
+            } else {
+                res.json({ "error": "not authenticated" });
+            }
+        });
+    });
+    
     apiRouter.route('/user').get(async (req, res) => {
         await User.find({}, async (err, users) => {
             if (err || users == undefined)
@@ -74,7 +94,6 @@ async function startRouters() {
             }
         });
     });
-
 
     // CREATE USER ENDPOINT
 

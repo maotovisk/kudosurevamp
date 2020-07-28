@@ -313,3 +313,11 @@ main {
                          "ks bk";
 
 }
+
+.link {
+    cursor: pointer;
+}
+
+.link:hover {
+    color: #a1a1a1;
+}
